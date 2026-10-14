@@ -1,0 +1,15 @@
+[
+  {
+    "id": "user-shaun",
+    "name": "Shaun Mathew",
+    "email": "shaunmathew@example.com",
+    "password_hash": "294e4de55009215ff42e35ca07e3f343337da96d0e1f6e8cedb20b2d250e914ca6cb20d2cbfc94f1d95115b671d433ebb27529b327708c36019f57e888d2bea1",
+    "password_salt": "be2b11a5d657dd203fe496864883bc17",
+    "workspace": "Personal workspace",
+    "initials": "S",
+    "risk_profile": "Balanced Compounder",
+    "benchmark": "S&P 500",
+    "created_at": "2026-01-15T09:00:00.000Z",
+    "updated_at": "2026-01-15T09:00:00.000Z"
+  }
+]

@@ -1,63 +1,63 @@
 /**
- * Authentication Controller for VibeFinance
- * Supports login for existing users and registration for new retail investors.
+ * Production Authentication Controller for VibeFinance
+ * Implements salted scrypt password hashing, HMAC-SHA256 signed JWT tokens,
+ * persistent disk storage, input validation, and strict authorization.
  */
 
-const userProfileData = require('../data/user_profile.json');
-
-// In-memory synthetic user database seeded with default user
-let usersDatabase = [
-  {
-    id: 'user-shaun',
-    name: 'Shaun Mathew',
-    email: 'shaunmathew@example.com',
-    password: 'password123',
-    workspace: 'Personal workspace',
-    initials: 'S',
-    risk_profile: 'Balanced Compounder',
-    benchmark: 'S&P 500',
-    created_at: '2026-01-15T09:00:00Z'
-  }
-];
+const userStore = require('../utils/user_store');
+const security = require('../utils/security');
 
 class AuthController {
   /**
-   * Login for existing users
+   * Login with email and password
+   * Verifies salted scrypt hash and issues cryptographically signed JWT token.
    */
   login(req, res) {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        error: 'Email and password are required.'
+        error: 'Email and password are required.',
+        code: 'VALIDATION_ERROR',
+        timestamp: new Date().toISOString()
       });
     }
 
-    const cleanEmail = email.trim().toLowerCase();
-    const user = usersDatabase.find(u => u.email.toLowerCase() === cleanEmail);
+    const cleanEmail = String(email).trim().toLowerCase();
+
+    if (!security.validateEmail(cleanEmail)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please enter a valid email address.',
+        code: 'INVALID_EMAIL_FORMAT',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    const user = userStore.verifyCredentials(cleanEmail, String(password));
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: 'No account found with this email. Please check your credentials or create a new account.'
+        error: 'Invalid email or password. Please verify your credentials or create a new account.',
+        code: 'INVALID_CREDENTIALS',
+        timestamp: new Date().toISOString()
       });
     }
 
-    // In demo environment, match password or accept standard password
-    if (user.password && user.password !== password && password !== 'password123') {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid password. (Tip: Demo password is password123)'
-      });
-    }
-
-    const token = `vibe_jwt_${Buffer.from(user.email).toString('base64')}_${Date.now()}`;
+    // Generate signed, expiring JWT token (24 hours expiry)
+    const token = security.generateToken({
+      userId: user.id,
+      email: user.email,
+      workspace: user.workspace
+    });
 
     res.json({
       success: true,
       message: `Welcome back, ${user.name}!`,
       token,
+      expires_in: 86400,
       user: {
         id: user.id,
         name: user.name,
@@ -65,86 +65,149 @@ class AuthController {
         workspace: user.workspace,
         initials: user.initials || user.name[0],
         risk_profile: user.risk_profile,
-        benchmark: user.benchmark || 'S&P 500'
-      }
+        benchmark: user.benchmark || 'S&P 500',
+        created_at: user.created_at
+      },
+      timestamp: new Date().toISOString()
     });
   }
 
   /**
-   * Signup for new users
+   * Register a new retail investor account
+   * Enforces password length, email syntax, validates uniqueness, and persists securely.
    */
   signup(req, res) {
-    const { name, email, password, risk_profile, benchmark } = req.body;
+    const { name, email, password, risk_profile, benchmark } = req.body || {};
 
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        error: 'Full name, email, and password are required.'
+        error: 'Full name, email, and password are required.',
+        code: 'MISSING_REQUIRED_FIELDS',
+        timestamp: new Date().toISOString()
       });
     }
 
-    const cleanEmail = email.trim().toLowerCase();
-    const existing = usersDatabase.find(u => u.email.toLowerCase() === cleanEmail);
+    const cleanName = String(name).trim();
+    const cleanEmail = String(email).trim().toLowerCase();
+    const rawPassword = String(password);
 
+    if (cleanName.length < 2) {
+      return res.status(400).json({
+        success: false,
+        error: 'Name must be at least 2 characters long.',
+        code: 'INVALID_NAME',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (!security.validateEmail(cleanEmail)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide a valid email address format (e.g., user@domain.com).',
+        code: 'INVALID_EMAIL',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    const pwCheck = security.validatePassword(rawPassword);
+    if (!pwCheck.valid) {
+      return res.status(400).json({
+        success: false,
+        error: pwCheck.error,
+        code: 'WEAK_PASSWORD',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Check email uniqueness
+    const existing = userStore.findByEmail(cleanEmail);
     if (existing) {
       return res.status(409).json({
         success: false,
-        error: 'An account with this email already exists. Please log in instead.'
+        error: 'An account with this email address already exists. Please sign in instead.',
+        code: 'EMAIL_ALREADY_EXISTS',
+        timestamp: new Date().toISOString()
       });
     }
 
-    const newUser = {
-      id: `user-${Date.now()}`,
-      name: name.trim(),
-      email: cleanEmail,
-      password,
-      workspace: `${name.trim()}'s Workspace`,
-      initials: name.trim()[0].toUpperCase(),
-      risk_profile: risk_profile || 'Balanced Compounder',
-      benchmark: benchmark || 'S&P 500',
-      created_at: new Date().toISOString()
-    };
+    try {
+      const newUser = userStore.createUser({
+        name: cleanName,
+        email: cleanEmail,
+        password: rawPassword,
+        risk_profile: risk_profile || 'Balanced Compounder',
+        benchmark: benchmark || 'S&P 500'
+      });
 
-    usersDatabase.push(newUser);
-
-    const token = `vibe_jwt_${Buffer.from(newUser.email).toString('base64')}_${Date.now()}`;
-
-    res.status(201).json({
-      success: true,
-      message: `Account created successfully! Welcome to VibeFinance, ${newUser.name}.`,
-      token,
-      user: {
-        id: newUser.id,
-        name: newUser.name,
+      const token = security.generateToken({
+        userId: newUser.id,
         email: newUser.email,
-        workspace: newUser.workspace,
-        initials: newUser.initials,
-        risk_profile: newUser.risk_profile,
-        benchmark: newUser.benchmark
-      }
-    });
+        workspace: newUser.workspace
+      });
+
+      res.status(201).json({
+        success: true,
+        message: `Account created successfully! Welcome to VibeFinance, ${newUser.name}.`,
+        token,
+        expires_in: 86400,
+        user: newUser,
+        timestamp: new Date().toISOString()
+      });
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        error: 'Failed to create user account.',
+        message: err.message,
+        code: 'USER_CREATION_FAILED',
+        timestamp: new Date().toISOString()
+      });
+    }
   }
 
   /**
-   * Get currently active or default profile
+   * Protected user session endpoint
+   * Strictly validates cryptographic signature and rejects unauthorized requests.
    */
   me(req, res) {
     const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer vibe_jwt_')) {
-      try {
-        const parts = authHeader.split('_');
-        const email = Buffer.from(parts[2], 'base64').toString('ascii');
-        const user = usersDatabase.find(u => u.email.toLowerCase() === email.toLowerCase());
-        if (user) {
-          return res.json({ success: true, user });
-        }
-      } catch (e) {}
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Authentication required. No Bearer token provided in Authorization header.',
+        code: 'UNAUTHORIZED_NO_TOKEN',
+        timestamp: new Date().toISOString()
+      });
     }
 
-    // Default Shaun Mathew profile
+    const token = authHeader.substring(7).trim();
+    const verification = security.verifyToken(token);
+
+    if (!verification.valid) {
+      return res.status(401).json({
+        success: false,
+        error: verification.error || 'Invalid or expired authentication token.',
+        code: 'UNAUTHORIZED_INVALID_TOKEN',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    const user = userStore.findById(verification.payload.userId);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'User account not found.',
+        code: 'UNAUTHORIZED_USER_NOT_FOUND',
+        timestamp: new Date().toISOString()
+      });
+    }
+
     res.json({
       success: true,
-      user: usersDatabase[0]
+      user: userStore.sanitizeUser(user),
+      token_expires_at: new Date(verification.payload.exp * 1000).toISOString(),
+      timestamp: new Date().toISOString()
     });
   }
 }

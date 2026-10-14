@@ -1,6 +1,6 @@
 /**
- * Portfolio Controller
- * Manages holdings, allocation, performance, and simulated trades.
+ * Portfolio Controller for VibeFinance
+ * Manages holdings, allocation, performance, and simulated trades with strict validation.
  */
 
 const portfolioData = require('../data/portfolio.json');
@@ -16,6 +16,7 @@ class PortfolioController {
   getPortfolio(req, res) {
     res.json({
       success: true,
+      timestamp: new Date().toISOString(),
       summary: activePortfolio.summary,
       holdings: activePortfolio.holdings,
       allocation: activePortfolio.allocation,
@@ -29,29 +30,61 @@ class PortfolioController {
   getHoldings(req, res) {
     res.json({
       success: true,
+      timestamp: new Date().toISOString(),
       count: activePortfolio.holdings.length,
       holdings: activePortfolio.holdings
     });
   }
 
   /**
-   * Execute simulated buy/sell order
+   * Execute simulated buy/sell order with strict input validation
    */
   executeTrade(req, res) {
-    const { symbol, type, shares, price } = req.body;
+    const { symbol, type, shares, price } = req.body || {};
 
-    if (!symbol || !type || !shares) {
+    if (!symbol || !type || shares === undefined || shares === null) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required trade fields: symbol, type (BUY/SELL), shares.'
+        error: 'Missing required trade fields: symbol, type (BUY/SELL), shares.',
+        code: 'MISSING_TRADE_FIELDS',
+        timestamp: new Date().toISOString()
       });
     }
 
-    const cleanSym = symbol.toUpperCase();
-    const tradeType = type.toUpperCase();
+    const cleanSym = String(symbol).trim().toUpperCase();
+    const tradeType = String(type).trim().toUpperCase();
     const numShares = parseFloat(shares);
+
+    if (isNaN(numShares) || numShares <= 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Shares must be a positive number greater than zero.',
+        code: 'INVALID_SHARES_QUANTITY',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (tradeType !== 'BUY' && tradeType !== 'SELL') {
+      return res.status(400).json({
+        success: false,
+        error: "Trade type must be either 'BUY' or 'SELL'.",
+        code: 'INVALID_TRADE_TYPE',
+        timestamp: new Date().toISOString()
+      });
+    }
+
     const stock = marketsData.stocks[cleanSym];
     const tradePrice = parseFloat(price) || (stock ? stock.current_price : 100);
+
+    if (isNaN(tradePrice) || tradePrice <= 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Trade price must be a positive number.',
+        code: 'INVALID_TRADE_PRICE',
+        timestamp: new Date().toISOString()
+      });
+    }
+
     const tradeTotal = Math.round(numShares * tradePrice * 100) / 100;
 
     const newTx = {
@@ -71,7 +104,8 @@ class PortfolioController {
       success: true,
       message: `Simulated ${tradeType} order for ${numShares} shares of ${cleanSym} executed successfully.`,
       transaction: newTx,
-      updated_cash_balance: activePortfolio.summary.cash_balance_formatted
+      updated_cash_balance: activePortfolio.summary.cash_balance_formatted,
+      timestamp: new Date().toISOString()
     });
   }
 
@@ -81,6 +115,7 @@ class PortfolioController {
   getTransactions(req, res) {
     res.json({
       success: true,
+      timestamp: new Date().toISOString(),
       transactions: activePortfolio.recent_transactions
     });
   }
@@ -93,7 +128,8 @@ class PortfolioController {
     res.json({
       success: true,
       message: 'Portfolio state reset to initial demo values.',
-      summary: activePortfolio.summary
+      summary: activePortfolio.summary,
+      timestamp: new Date().toISOString()
     });
   }
 }

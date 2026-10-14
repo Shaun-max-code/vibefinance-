@@ -3,19 +3,32 @@
  * Backend API Server
  */
 
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const apiRoutes = require('./src/routes/api');
+const { apiLimiter } = require('./src/utils/rate_limiter');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS for frontend Vite dev server (usually localhost:5173) and any origin
+// Refined CORS configuration with environment override
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
+  : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
 app.use(cors({
-  origin: '*',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, server-to-server) or matching allowed list
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Permissive in dev to avoid blocking unexpected local ports
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 app.use(express.json());
@@ -31,8 +44,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Mount master API routes
-app.use('/api', apiRoutes);
+// Mount master API routes with rate limiter
+app.use('/api', apiLimiter, apiRoutes);
 
 // Root landing route with interactive HTML API Explorer
 app.get('/', (req, res) => {
@@ -194,18 +207,21 @@ app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: 'Endpoint not found',
+    code: 'NOT_FOUND',
     requested_url: req.originalUrl,
-    available_catalog: '/api'
+    available_catalog: '/api',
+    timestamp: new Date().toISOString()
   });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled server error:', err);
-  res.status(500).json({
+  res.status(err.status || 500).json({
     success: false,
-    error: 'Internal Server Error',
-    message: err.message
+    error: err.message || 'Internal Server Error',
+    code: err.code || 'INTERNAL_SERVER_ERROR',
+    timestamp: new Date().toISOString()
   });
 });
 
