@@ -81,31 +81,67 @@ function createDemoResponse(question, agent) {
   }
 }
 
-export default function ResearchStudio() {
+import { useEffect } from 'react'
+
+export default function ResearchStudio({ initialQuestion = '' }) {
   const [activeAgent, setActiveAgent] = useState('research')
   const [question, setQuestion] = useState('')
   const [messages, setMessages] = useState([])
   const [showSources, setShowSources] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const selectedAgent = agents.find(agent => agent.id === activeAgent) ?? agents[1]
 
-  function submitQuestion(value = question) {
+  useEffect(() => {
+    if (initialQuestion && initialQuestion.trim()) {
+      setQuestion(initialQuestion)
+    }
+  }, [initialQuestion])
+
+  async function submitQuestion(value = question) {
     const prompt = value.trim()
     if (!prompt) return
 
-    const response = createDemoResponse(prompt, selectedAgent)
+    setLoading(true)
+    setQuestion('')
+    setShowSources(false)
 
+    try {
+      const res = await fetch('http://localhost:5000/api/research/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: prompt, agent_id: selectedAgent.id })
+      })
+      const data = await res.json()
+
+      if (data && data.response) {
+        setMessages(previous => [
+          ...previous,
+          {
+            id: data.id || `${Date.now()}-${previous.length}`,
+            question: prompt,
+            agent: data.agent || selectedAgent.name,
+            response: data.response,
+          },
+        ])
+        setLoading(false)
+        return
+      }
+    } catch (e) {
+      // Graceful fallback to local synthetic response
+    }
+
+    const fallbackResponse = createDemoResponse(prompt, selectedAgent)
     setMessages(previous => [
       ...previous,
       {
         id: `${Date.now()}-${previous.length}`,
         question: prompt,
         agent: selectedAgent.name,
-        response,
+        response: fallbackResponse,
       },
     ])
-    setQuestion('')
-    setShowSources(false)
+    setLoading(false)
   }
 
   return (
@@ -230,11 +266,23 @@ export default function ResearchStudio() {
                       <div className="rs-caveat"><ShieldCheck size={16} /><p>{message.response.caveat}</p></div>
 
                       <button className="rs-source-toggle" onClick={() => setShowSources(!showSources)}>
-                        <FileText size={15} /> Source status <ChevronDown size={14} />
+                        <FileText size={15} /> Source status & citations <ChevronDown size={14} />
                       </button>
                       {showSources && (
                         <div className="rs-source-detail">
-                          No external sources were retrieved. No citations are available for this simulated response.
+                          {message.response.sources && message.response.sources.length > 0 ? (
+                            <div style={{ display: 'grid', gap: '8px' }}>
+                              {message.response.sources.map(s => (
+                                <div key={s.id || s.title} style={{ borderLeft: '2px solid #34d399', paddingLeft: '8px' }}>
+                                  <strong style={{ color: '#e2e8f0', display: 'block', fontSize: '11px' }}>[{s.id}] {s.title}</strong>
+                                  <span style={{ color: '#8492a6', fontSize: '10px' }}>Ref: {s.ref || s.category} ({s.date})</span>
+                                  {s.snippet && <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '10px' }}>{s.snippet}</p>}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            'No external sources were retrieved. No citations are available for this simulated response.'
+                          )}
                         </div>
                       )}
                     </div>

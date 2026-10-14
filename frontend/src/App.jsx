@@ -11,6 +11,12 @@ import {
   Sparkles, Wallet, Zap,
 } from 'lucide-react'
 import ResearchStudio from './ResearchStudio'
+import MarketsView from './components/MarketsView'
+import PortfolioView from './components/PortfolioView'
+import RiskAnalysisView from './components/RiskAnalysisView'
+import ReportsView from './components/ReportsView'
+import SettingsView from './components/SettingsView'
+import './components/Views.css'
 import './App.css'
 
 const performanceData = [
@@ -427,26 +433,25 @@ function App() {
               </footer>
             </>
           ) : active === 'AI Research' ? (
-            <ResearchStudio />
+            <ResearchStudio initialQuestion={question} />
+          ) : active === 'Markets' ? (
+            <MarketsView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+          ) : active === 'Portfolio' ? (
+            <PortfolioView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+          ) : active === 'Risk Analysis' ? (
+            <RiskAnalysisView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+          ) : active === 'Reports' ? (
+            <ReportsView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+          ) : active === 'Settings' ? (
+            <SettingsView />
           ) : (
             <section className="panel placeholder-page">
               <div className="placeholder-icon">
-                {active === 'Risk Analysis' ? <ShieldCheck size={28} /> : active === 'Portfolio' ? <Wallet size={28} /> : active === 'Settings' ? <Settings2 size={28} /> : <ChartNoAxesCombined size={28} />}
+                <LayoutDashboard size={28} />
               </div>
               <span className="eyebrow">VIBEFINANCE WORKSPACE</span>
               <h1>{active}</h1>
-              <p>
-                {active === 'Risk Analysis'
-                  ? 'Explore portfolio concentration, volatility, drawdown, and scenario analysis as risk calculations are implemented.'
-                  : active === 'Portfolio'
-                    ? 'Explore your holdings, allocation and performance. Demo figures are not linked to a brokerage account.'
-                    : active === 'Settings'
-                      ? 'Workspace settings will be implemented as the platform develops.'
-                      : 'Explore market movements and selected assets as live market data integration is implemented.'}
-              </p>
-              <div className="placeholder-note">
-                <Sparkles size={16} /> This section is part of the planned interface.
-              </div>
+              <p>Workspace section.</p>
               <button className="ask-button" onClick={() => setActive('Dashboard')}>
                 Back to dashboard <ArrowUpRight size={15} />
               </button>
