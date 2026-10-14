@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
   Settings2, User, ShieldCheck, Bell, Database,
-  CheckCircle, ArrowUpRight, Sparkles, RefreshCw
+  CheckCircle, ArrowUpRight, Sparkles, RefreshCw, LogOut
 } from 'lucide-react'
 
-export default function SettingsView() {
+export default function SettingsView({ onLogout }) {
   const [profile, setProfile] = useState({
     name: 'Shaun Mathew',
     email: 'shaunmathew@example.com',
@@ -100,6 +100,17 @@ export default function SettingsView() {
               <option value="NIFTY 50">NIFTY 50 (Indian Equities)</option>
             </select>
           </div>
+
+          {onLogout && (
+            <button
+              type="button"
+              className="topbar-logout-btn"
+              style={{ marginTop: '16px', width: '100%', justifyContent: 'center', padding: '10px' }}
+              onClick={onLogout}
+            >
+              <LogOut size={14} /> Sign Out of Workspace
+            </button>
+          )}
         </div>
 
         {/* Risk & Mandate Preferences */}

@@ -110,7 +110,16 @@ export default function PortfolioView({ onNavigateToResearch }) {
           <h1>Portfolio Holdings<span className="brand-accent">.</span></h1>
           <p>Real-time valuation, cost basis tracking, and simulated trade execution.</p>
         </div>
-        <div className="header-actions">
+        <div className="header-actions" style={{ display: 'flex', gap: '10px' }}>
+          {onNavigateToResearch && (
+            <button
+              className="trade-quick-btn"
+              style={{ padding: '8px 12px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+              onClick={() => onNavigateToResearch('Perform full multi-agent risk and concentration audit of active portfolio positions')}
+            >
+              <Sparkles size={14} /> Ask AI Portfolio Audit
+            </button>
+          )}
           <button className="ask-button" onClick={() => setShowTradeModal(true)}>
             <Plus size={15} /> Simulate Trade
           </button>

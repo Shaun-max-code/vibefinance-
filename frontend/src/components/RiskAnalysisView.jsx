@@ -110,6 +110,16 @@ export default function RiskAnalysisView({ onNavigateToResearch }) {
           <h1>Risk Analysis<span className="brand-accent">.</span></h1>
           <p>Herfindahl concentration index, parametric Value-at-Risk, and macro scenario stress testing.</p>
         </div>
+        {onNavigateToResearch && (
+          <div className="header-actions">
+            <button
+              className="ask-button"
+              onClick={() => onNavigateToResearch('Evaluate portfolio tail risk, Value-at-Risk parameters, and sector concentration')}
+            >
+              <Sparkles size={15} /> Ask Risk Agent Audit
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Core Risk Metrics Grid */}

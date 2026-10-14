@@ -5,7 +5,7 @@ import {
   BarChart3, Globe, Zap, ArrowRight, User
 } from 'lucide-react'
 
-export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignup, currentUser }) {
+export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignup, onLogout, currentUser }) {
   return (
     <div className="landing-page">
       {/* Navigation Bar */}
@@ -25,10 +25,18 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
 
           <div className="landing-nav-actions">
             {currentUser ? (
-              <div className="user-logged-box">
+              <div className="user-logged-box" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span className="user-greeting">Welcome, <strong>{currentUser.name}</strong></span>
                 <button className="ask-button" onClick={onLaunchTerminal}>
                   Open Terminal <ArrowUpRight size={14} />
+                </button>
+                <button
+                  className="landing-login-btn"
+                  onClick={onLogout}
+                  title="Sign Out"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '7px 12px' }}
+                >
+                  <Lock size={13} /> Sign Out
                 </button>
               </div>
             ) : (

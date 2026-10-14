@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Activity, ArrowDownRight, ArrowUpRight, BrainCircuit, Check,
   ChevronDown, CircleHelp, FileText, Globe2, Search, Send,
@@ -81,25 +81,18 @@ function createDemoResponse(question, agent) {
   }
 }
 
-import { useEffect } from 'react'
-
 export default function ResearchStudio({ initialQuestion = '' }) {
   const [activeAgent, setActiveAgent] = useState('research')
   const [question, setQuestion] = useState('')
   const [messages, setMessages] = useState([])
   const [showSources, setShowSources] = useState(false)
   const [loading, setLoading] = useState(false)
+  const lastProcessedRef = useRef('')
 
   const selectedAgent = agents.find(agent => agent.id === activeAgent) ?? agents[1]
 
-  useEffect(() => {
-    if (initialQuestion && initialQuestion.trim()) {
-      setQuestion(initialQuestion)
-    }
-  }, [initialQuestion])
-
   async function submitQuestion(value = question) {
-    const prompt = value.trim()
+    const prompt = (typeof value === 'string' ? value : question).trim()
     if (!prompt) return
 
     setLoading(true)
@@ -143,6 +136,13 @@ export default function ResearchStudio({ initialQuestion = '' }) {
     ])
     setLoading(false)
   }
+
+  useEffect(() => {
+    if (initialQuestion && initialQuestion.trim() && initialQuestion !== lastProcessedRef.current) {
+      lastProcessedRef.current = initialQuestion
+      submitQuestion(initialQuestion)
+    }
+  }, [initialQuestion])
 
   return (
     <div className="research-studio">
@@ -288,6 +288,21 @@ export default function ResearchStudio({ initialQuestion = '' }) {
                     </div>
                   </article>
                 ))}
+
+                {loading && (
+                  <article className="rs-exchange">
+                    <div className="rs-answer" style={{ borderColor: '#245342', background: '#0a1614' }}>
+                      <div className="rs-answer-heading">
+                        <span className="rs-answer-avatar"><BrainCircuit size={16} /></span>
+                        <div><strong>{selectedAgent.name}</strong><small>Multi-agent research synthesis in progress...</small></div>
+                        <span className="rs-illustrative-tag" style={{ color: '#34d399', borderColor: '#164e41', background: '#0d221c' }}>ANALYZING</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '14px', color: '#6ee7b7', fontSize: '11px' }}>
+                        <Sparkles size={15} /> Synthesizing financial filings, options sentiment, and risk indicators...
+                      </div>
+                    </div>
+                  </article>
+                )}
               </div>
             )}
           </div>
@@ -308,8 +323,8 @@ export default function ResearchStudio({ initialQuestion = '' }) {
             />
             <div className="rs-composer-footer">
               <span><Globe2 size={14} /> Demo mode · No external lookup</span>
-              <button type="submit" disabled={!question.trim()}>
-                Run research <Send size={15} />
+              <button type="submit" disabled={!question.trim() || loading}>
+                {loading ? 'Synthesizing...' : 'Run research'} <Send size={15} />
               </button>
             </div>
           </form>

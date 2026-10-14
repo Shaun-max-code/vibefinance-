@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer,
   Tooltip, XAxis, YAxis, PieChart, Pie, Cell,
@@ -8,7 +8,7 @@ import {
   Activity, ArrowDownRight, ArrowUpRight, Bell, BrainCircuit,
   BriefcaseBusiness, ChartNoAxesCombined, ChevronDown, FileText,
   LayoutDashboard, Menu, Search, Settings2, ShieldCheck,
-  Sparkles, Wallet, Zap, Globe, LogOut, LogIn
+  Sparkles, Wallet, Zap, Globe, LogOut, LogIn, X, Check, CheckCircle, Clock
 } from 'lucide-react'
 import ResearchStudio from './ResearchStudio'
 import MarketsView from './components/MarketsView'
@@ -22,17 +22,76 @@ import './components/LandingAuth.css'
 import './components/Views.css'
 import './App.css'
 
-const performanceData = [
-  { date: 'Sep 14', value: 18200 },
-  { date: 'Sep 18', value: 19400 },
-  { date: 'Sep 22', value: 18800 },
-  { date: 'Sep 26', value: 21100 },
-  { date: 'Sep 30', value: 20500 },
-  { date: 'Oct 03', value: 22400 },
-  { date: 'Oct 07', value: 21800 },
-  { date: 'Oct 10', value: 23100 },
-  { date: 'Oct 14', value: 24392 },
-]
+const performanceDataByPeriod = {
+  '1D': {
+    summary: '$24,392.50',
+    change: '+$588.20 (+2.47%)',
+    data: [
+      { date: '09:30', value: 23804 },
+      { date: '10:30', value: 24020 },
+      { date: '11:30', value: 23950 },
+      { date: '12:30', value: 24110 },
+      { date: '13:30', value: 24080 },
+      { date: '14:30', value: 24250 },
+      { date: '15:30', value: 24310 },
+      { date: '16:00', value: 24392 },
+    ]
+  },
+  '1W': {
+    summary: '$24,392.50',
+    change: '+$1,240.10 (+5.36%)',
+    data: [
+      { date: 'Oct 08', value: 23152 },
+      { date: 'Oct 09', value: 23410 },
+      { date: 'Oct 10', value: 23100 },
+      { date: 'Oct 11', value: 23680 },
+      { date: 'Oct 12', value: 23900 },
+      { date: 'Oct 13', value: 24150 },
+      { date: 'Oct 14', value: 24392 },
+    ]
+  },
+  '1M': {
+    summary: '$24,392.50',
+    change: '+$3,832.20 (+18.6%)',
+    data: [
+      { date: 'Sep 14', value: 18200 },
+      { date: 'Sep 18', value: 19400 },
+      { date: 'Sep 22', value: 18800 },
+      { date: 'Sep 26', value: 21100 },
+      { date: 'Sep 30', value: 20500 },
+      { date: 'Oct 03', value: 22400 },
+      { date: 'Oct 07', value: 21800 },
+      { date: 'Oct 10', value: 23100 },
+      { date: 'Oct 14', value: 24392 },
+    ]
+  },
+  '3M': {
+    summary: '$24,392.50',
+    change: '+$5,120.40 (+26.6%)',
+    data: [
+      { date: 'Jul 15', value: 19272 },
+      { date: 'Aug 01', value: 19850 },
+      { date: 'Aug 15', value: 18900 },
+      { date: 'Sep 01', value: 20400 },
+      { date: 'Sep 15', value: 21500 },
+      { date: 'Oct 01', value: 22800 },
+      { date: 'Oct 14', value: 24392 },
+    ]
+  },
+  '1Y': {
+    summary: '$24,392.50',
+    change: '+$7,890.00 (+47.8%)',
+    data: [
+      { date: 'Nov 25', value: 16500 },
+      { date: 'Jan 26', value: 17200 },
+      { date: 'Mar 26', value: 18100 },
+      { date: 'May 26', value: 19400 },
+      { date: 'Jul 26', value: 20800 },
+      { date: 'Sep 26', value: 22500 },
+      { date: 'Oct 26', value: 24392 },
+    ]
+  }
+}
 
 const holdings = [
   { symbol: 'AAPL', name: 'Apple Inc.', price: '$245.50', change: '+2.1%', weight: '24.5%', color: '#94a3b8' },
@@ -62,6 +121,28 @@ const insights = [
   { tag: 'RISK ALERT', title: 'Growth stocks may increase concentration risk', icon: ShieldCheck },
 ]
 
+const searchCatalog = [
+  { type: 'view', title: 'Dashboard', desc: 'Financial command center & key metrics', icon: LayoutDashboard },
+  { type: 'view', title: 'Markets', desc: 'Global benchmarks, equity screener & technicals', icon: ChartNoAxesCombined },
+  { type: 'view', title: 'AI Research', desc: 'Multi-agent intelligence synthesis studio', icon: BrainCircuit },
+  { type: 'view', title: 'Portfolio', desc: 'Active positions, allocation & order simulation', icon: BriefcaseBusiness },
+  { type: 'view', title: 'Risk Analysis', desc: 'Herfindahl concentration & macro stress tests', icon: ShieldCheck },
+  { type: 'view', title: 'Reports', desc: 'Institutional dossiers & executive memos', icon: FileText },
+  { type: 'view', title: 'Settings', desc: 'Investor profile & risk constraints', icon: Settings2 },
+  { type: 'stock', symbol: 'AAPL', name: 'Apple Inc.', price: '$245.50', change: '+2.1%', sector: 'Tech' },
+  { type: 'stock', symbol: 'MSFT', name: 'Microsoft Corp', price: '$521.40', change: '+1.4%', sector: 'Tech' },
+  { type: 'stock', symbol: 'NVDA', name: 'NVIDIA Corp', price: '$188.20', change: '+3.8%', sector: 'Semiconductors' },
+  { type: 'stock', symbol: 'GOOGL', name: 'Alphabet Inc.', price: '$245.10', change: '-0.4%', sector: 'Tech' },
+  { type: 'stock', symbol: 'SPY', name: 'S&P 500 ETF', price: '6,742.18', change: '+1.13%', sector: 'Index' },
+]
+
+const initialNotifications = [
+  { id: 1, title: 'Fed Rate Scenario Assessed', body: 'Risk agent estimated 50 bps shock impact at -$1,280.', time: '10m ago', unread: true, target: 'Risk Analysis' },
+  { id: 2, title: 'NVDA Momentum Breakout', body: 'RSI(14) stretched to 71.8 with high call volume.', time: '35m ago', unread: true, target: 'Markets' },
+  { id: 3, title: 'Concentration Guardrail Alert', body: 'HHI index registered at 2085 (moderate threshold).', time: '2h ago', unread: false, target: 'Risk Analysis' },
+  { id: 4, title: 'Weekly Intelligence Published', body: 'Dossier REP-2026-W41 is ready for inspection.', time: '1d ago', unread: false, target: 'Reports' },
+]
+
 function Metric({ title, value, change, icon: Icon }) {
   return (
     <article className="metric-card">
@@ -84,6 +165,15 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [viewMode, setViewMode] = useState('landing') // 'landing' | 'terminal'
   const [authModal, setAuthModal] = useState(null) // 'login' | 'signup' | null
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [notifications, setNotifications] = useState(initialNotifications)
+
+  const searchRef = useRef(null)
+  const searchInputRef = useRef(null)
+  const notifRef = useRef(null)
+
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = localStorage.getItem('vibefinance_user')
@@ -102,12 +192,106 @@ function App() {
     { label: 'Reports', icon: FileText },
   ]
 
-  function askResearch(event) {
-    event.preventDefault()
-    if (question.trim()) {
-      setActive('AI Research')
+  // Global keydown listener for search shortcut '/' or 'Ctrl+K'
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if ((e.key === '/' || (e.ctrlKey && e.key.toLowerCase() === 'k')) && document.activeElement !== searchInputRef.current) {
+        if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          e.preventDefault()
+          searchInputRef.current?.focus()
+          setSearchOpen(true)
+        }
+      }
+      if (e.key === 'Escape') {
+        setSearchOpen(false)
+        setNotificationsOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchOpen(false)
+      }
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotificationsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  function handleLogout() {
+    localStorage.removeItem('vibefinance_user')
+    localStorage.removeItem('vibefinance_token')
+    setCurrentUser(null)
+    setViewMode('landing')
+    setActive('Dashboard')
+    setMenuOpen(false)
+  }
+
+  function askResearch(event, customQuestion) {
+    if (event && event.preventDefault) event.preventDefault()
+    const q = (customQuestion !== undefined ? customQuestion : question).trim()
+    if (q) {
+      setQuestion(q)
+    }
+    setActive('AI Research')
+  }
+
+  function handleAskInsight(item) {
+    const q = `Analyze market signal: ${item.title} (${item.tag})`
+    setQuestion(q)
+    setActive('AI Research')
+  }
+
+  function handleSelectSearchItem(item) {
+    setSearchOpen(false)
+    setSearchQuery('')
+    if (item.type === 'view') {
+      setActive(item.title)
+    } else if (item.type === 'stock') {
+      setActive('Markets')
     }
   }
+
+  function handleSearchAskAI(prompt) {
+    setSearchOpen(false)
+    setSearchQuery('')
+    setQuestion(prompt)
+    setActive('AI Research')
+  }
+
+  function handleNotifClick(notif) {
+    setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, unread: false } : n))
+    setNotificationsOpen(false)
+    if (notif.target) {
+      setActive(notif.target)
+    }
+  }
+
+  function handleClearNotifications() {
+    setNotifications(prev => prev.map(n => ({ ...n, unread: false })))
+  }
+
+  const unreadCount = notifications.filter(n => n.unread).length
+
+  // Filter search catalog
+  const filteredSearchItems = searchCatalog.filter(item => {
+    if (!searchQuery.trim()) return true
+    const q = searchQuery.toLowerCase()
+    if (item.type === 'view') {
+      return item.title.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q)
+    }
+    if (item.type === 'stock') {
+      return item.symbol.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.sector.toLowerCase().includes(q)
+    }
+    return false
+  })
 
   return (
     <>
@@ -116,6 +300,7 @@ function App() {
           onLaunchTerminal={() => setViewMode('terminal')}
           onOpenLogin={() => setAuthModal('login')}
           onOpenSignup={() => setAuthModal('signup')}
+          onLogout={handleLogout}
           currentUser={currentUser}
         />
       ) : (
@@ -163,7 +348,7 @@ function App() {
               <div className="promo-icon"><Zap size={17} /></div>
               <strong>Intelligence, amplified.</strong>
               <p>One question. Multiple perspectives.</p>
-              <button onClick={() => setActive('AI Research')}>
+              <button onClick={() => { setQuestion(''); setActive('AI Research'); }}>
                 Explore AI <ArrowUpRight size={14} />
               </button>
             </div>
@@ -178,18 +363,36 @@ function App() {
               <span>Settings</span>
             </button>
 
+            <button
+              className="nav-item sidebar-logout-btn"
+              onClick={handleLogout}
+              title="Log Out from workspace"
+            >
+              <LogOut size={18} />
+              <span>Log Out</span>
+            </button>
+
             <div
               className="profile"
-              onClick={() => setAuthModal('login')}
+              onClick={() => setActive('Settings')}
               style={{ cursor: 'pointer' }}
-              title="Account Settings / Switch User"
+              title="Account Settings"
             >
               <div className="avatar">{currentUser ? (currentUser.initials || currentUser.name[0]) : 'S'}</div>
               <div className="profile-text">
                 <strong>{currentUser ? currentUser.name : 'Shaun Mathew'}</strong>
                 <span>{currentUser ? currentUser.workspace : 'Personal workspace'}</span>
               </div>
-              <ChevronDown size={15} />
+              <button
+                className="profile-action-btn"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleLogout()
+                }}
+                title="Log Out"
+              >
+                <LogOut size={14} />
+              </button>
             </div>
           </div>
         </aside>
@@ -212,11 +415,114 @@ function App() {
             <Menu size={20} />
           </button>
 
-          <div className="breadcrumbs">
-            <Search size={15} />
+          <div
+            className="breadcrumbs"
+            onClick={() => setActive('Dashboard')}
+            style={{ cursor: 'pointer' }}
+            title="Go to Dashboard"
+          >
+            <Activity size={15} />
             <span>Workspace</span>
             <span className="slash">/</span>
             <strong>{active}</strong>
+          </div>
+
+          {/* Interactive Workspace Search Bar */}
+          <div className="topbar-center" ref={searchRef}>
+            <div className="workspace-search-bar">
+              <Search size={14} style={{ color: '#64748b', flexShrink: 0 }} />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={e => { setSearchQuery(e.target.value); setSearchOpen(true); }}
+                onFocus={() => setSearchOpen(true)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    handleSearchAskAI(searchQuery.trim())
+                  }
+                }}
+                placeholder="Search workspace, stocks (AAPL, NVDA), or ask AI... (Press /)"
+                aria-label="Search workspace"
+              />
+              {searchQuery && (
+                <button
+                  className="search-clear-btn"
+                  onClick={() => { setSearchQuery(''); setSearchOpen(false); }}
+                >
+                  <X size={13} />
+                </button>
+              )}
+              <span className="search-hotkey-badge">/</span>
+            </div>
+
+            {searchOpen && (
+              <div className="search-dropdown">
+                {searchQuery.trim() && (
+                  <button
+                    className="search-item search-ai-action"
+                    onClick={() => handleSearchAskAI(searchQuery.trim())}
+                  >
+                    <div className="search-item-left">
+                      <div className="search-item-icon">
+                        <Sparkles size={14} />
+                      </div>
+                      <div className="search-item-title">
+                        <strong>Ask AI Agent: "{searchQuery.trim()}"</strong>
+                        <small>Execute autonomous multi-agent research synthesis</small>
+                      </div>
+                    </div>
+                    <ArrowUpRight size={14} style={{ color: '#34d399' }} />
+                  </button>
+                )}
+
+                <div className="search-section-label">WORKSPACE VIEWS</div>
+                {filteredSearchItems.filter(i => i.type === 'view').map(v => {
+                  const Icon = v.icon
+                  return (
+                    <button
+                      key={v.title}
+                      className="search-item"
+                      onClick={() => handleSelectSearchItem(v)}
+                    >
+                      <div className="search-item-left">
+                        <div className="search-item-icon">
+                          <Icon size={14} />
+                        </div>
+                        <div className="search-item-title">
+                          <strong>{v.title}</strong>
+                          <small>{v.desc}</small>
+                        </div>
+                      </div>
+                      <ChevronDown size={13} style={{ transform: 'rotate(-90deg)', color: '#64748b' }} />
+                    </button>
+                  )
+                })}
+
+                <div className="search-section-label" style={{ marginTop: '6px' }}>TRACKED ASSETS & EQUITIES</div>
+                {filteredSearchItems.filter(i => i.type === 'stock').map(s => (
+                  <button
+                    key={s.symbol}
+                    className="search-item"
+                    onClick={() => handleSelectSearchItem(s)}
+                  >
+                    <div className="search-item-left">
+                      <div className="search-item-icon" style={{ fontWeight: 800, fontSize: '11px' }}>
+                        {s.symbol[0]}
+                      </div>
+                      <div className="search-item-title">
+                        <strong>{s.symbol} · {s.name}</strong>
+                        <small>{s.sector}</small>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ color: '#e2e8f0', fontSize: '11px', fontWeight: 600 }}>{s.price}</div>
+                      <span className={s.change.startsWith('+') ? 'positive' : 'negative'} style={{ fontSize: '10px' }}>{s.change}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="top-actions">
@@ -230,38 +536,61 @@ function App() {
               <Globe size={13} /> Home
             </button>
 
-            {currentUser ? (
-              <button
-                className="landing-login-btn"
-                style={{ fontSize: '11px', padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                onClick={() => {
-                  localStorage.removeItem('vibefinance_user')
-                  localStorage.removeItem('vibefinance_token')
-                  setCurrentUser(null)
-                  setViewMode('landing')
-                }}
-                title="Sign Out"
-              >
-                <LogOut size={13} /> Sign Out
-              </button>
-            ) : (
-              <button
-                className="ask-button"
-                style={{ fontSize: '11px', padding: '5px 11px' }}
-                onClick={() => setAuthModal('login')}
-              >
-                Sign In
-              </button>
-            )}
-
-            <button className="icon-button notification" aria-label="Notifications">
-              <Bell size={18} /><i />
+            {/* Prominent Log Out button always available */}
+            <button
+              className="topbar-logout-btn"
+              onClick={handleLogout}
+              title="Log Out from workspace"
+            >
+              <LogOut size={13} /> Log Out
             </button>
+
+            {/* Notifications with interactive popover */}
+            <div className="notifications-wrap" ref={notifRef}>
+              <button
+                className="icon-button notification"
+                aria-label="Notifications"
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+              >
+                <Bell size={18} />
+                {unreadCount > 0 && <i />}
+              </button>
+
+              {notificationsOpen && (
+                <div className="notifications-dropdown">
+                  <div className="notif-header">
+                    <strong>Alerts & Intelligence</strong>
+                    {unreadCount > 0 && (
+                      <button className="notif-clear-btn" onClick={handleClearNotifications}>
+                        Mark all read
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="notif-list">
+                    {notifications.map(n => (
+                      <div
+                        key={n.id}
+                        className={`notif-item ${n.unread ? 'notif-unread' : ''}`}
+                        onClick={() => handleNotifClick(n)}
+                      >
+                        <div className="notif-top">
+                          <span className="notif-title">{n.title}</span>
+                          <span className="notif-time">{n.time}</span>
+                        </div>
+                        <p className="notif-body">{n.body}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div
               className="avatar small-avatar"
-              onClick={() => setAuthModal('login')}
+              onClick={() => setActive('Settings')}
               style={{ cursor: 'pointer' }}
-              title="User Account"
+              title="User Account & Settings"
             >
               {currentUser ? (currentUser.initials || currentUser.name[0]) : 'S'}
             </div>
@@ -322,9 +651,11 @@ function App() {
 
                   <div className="chart-summary">
                     <div>
-                      <div className="chart-total">$24,392.50</div>
+                      <div className="chart-total">
+                        {performanceDataByPeriod[period]?.summary || '$24,392.50'}
+                      </div>
                       <div className="positive">
-                        <ArrowUpRight size={15} /> +$3,832.20 (+18.6%)
+                        <ArrowUpRight size={15} /> {performanceDataByPeriod[period]?.change || '+$3,832.20 (+18.6%)'}
                       </div>
                     </div>
                     <div className="periods">
@@ -343,7 +674,10 @@ function App() {
 
                   <div className="chart-container">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={performanceData} margin={{ top: 12, right: 8, left: -18, bottom: 0 }}>
+                      <AreaChart
+                        data={performanceDataByPeriod[period]?.data || performanceDataByPeriod['1M'].data}
+                        margin={{ top: 12, right: 8, left: -18, bottom: 0 }}
+                      >
                         <defs>
                           <linearGradient id="fillPortfolio" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="#10b981" stopOpacity={0.25} />
@@ -363,7 +697,7 @@ function App() {
                   </div>
 
                   <div className="chart-footer">
-                    <span><i className="legend-dot" /> Portfolio value</span>
+                    <span><i className="legend-dot" /> Portfolio value ({period})</span>
                     <span>Historical values · Demo only</span>
                   </div>
                 </article>
@@ -485,12 +819,17 @@ function App() {
                     {insights.map(item => {
                       const Icon = item.icon
                       return (
-                        <button key={item.title} className="insight-row" onClick={() => setActive('AI Research')}>
+                        <button
+                          key={item.title}
+                          className="insight-row"
+                          onClick={() => handleAskInsight(item)}
+                          title="Click to analyze with AI"
+                        >
                           <span className="insight-icon"><Icon size={17} /></span>
                           <span className="insight-copy">
                             <small>{item.tag}</small>
                             <strong>{item.title}</strong>
-                            <span>Illustrative insight</span>
+                            <span>Click to analyze in AI Research</span>
                           </span>
                           <ArrowUpRight size={15} />
                         </button>
@@ -498,7 +837,7 @@ function App() {
                     })}
                   </div>
 
-                  <button className="research-button" onClick={() => setActive('AI Research')}>
+                  <button className="research-button" onClick={() => { setQuestion(''); setActive('AI Research'); }}>
                     <BrainCircuit size={16} /> Open Research Studio <ArrowUpRight size={15} />
                   </button>
                 </article>
@@ -520,7 +859,7 @@ function App() {
           ) : active === 'Reports' ? (
             <ReportsView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
           ) : active === 'Settings' ? (
-            <SettingsView />
+            <SettingsView onLogout={handleLogout} />
           ) : (
             <section className="panel placeholder-page">
               <div className="placeholder-icon">
