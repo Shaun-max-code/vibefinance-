@@ -1,0 +1,200 @@
+{
+  "summary": {
+    "portfolio_value": 24392.50,
+    "portfolio_value_formatted": "$24,392.50",
+    "daily_pnl": 588.20,
+    "daily_pnl_formatted": "+$588.20",
+    "daily_pnl_change": "+2.47% today",
+    "total_return": 3832.20,
+    "total_return_formatted": "+$3,832.20",
+    "total_return_pct": "+18.6%",
+    "total_return_change": "+18.6% all time",
+    "cash_balance": 3250.00,
+    "cash_balance_formatted": "$3,250.00",
+    "cash_balance_change": "13.3% of portfolio",
+    "currency": "USD",
+    "last_updated": "2026-10-14T16:00:00Z"
+  },
+  "performance": {
+    "1D": [
+      { "date": "09:30", "value": 23804.30 },
+      { "date": "10:30", "value": 23910.10 },
+      { "date": "11:30", "value": 24050.40 },
+      { "date": "12:30", "value": 23980.20 },
+      { "date": "13:30", "value": 24190.50 },
+      { "date": "14:30", "value": 24280.00 },
+      { "date": "15:30", "value": 24340.20 },
+      { "date": "16:00", "value": 24392.50 }
+    ],
+    "1W": [
+      { "date": "Oct 08", "value": 22100.00 },
+      { "date": "Oct 09", "value": 22450.00 },
+      { "date": "Oct 10", "value": 23100.00 },
+      { "date": "Oct 11", "value": 23550.00 },
+      { "date": "Oct 12", "value": 23800.00 },
+      { "date": "Oct 13", "value": 24100.00 },
+      { "date": "Oct 14", "value": 24392.50 }
+    ],
+    "1M": [
+      { "date": "Sep 14", "value": 18200 },
+      { "date": "Sep 18", "value": 19400 },
+      { "date": "Sep 22", "value": 18800 },
+      { "date": "Sep 26", "value": 21100 },
+      { "date": "Sep 30", "value": 20500 },
+      { "date": "Oct 03", "value": 22400 },
+      { "date": "Oct 07", "value": 21800 },
+      { "date": "Oct 10", "value": 23100 },
+      { "date": "Oct 14", "value": 24392 }
+    ],
+    "3M": [
+      { "date": "Jul 15", "value": 16500 },
+      { "date": "Jul 29", "value": 17200 },
+      { "date": "Aug 12", "value": 17800 },
+      { "date": "Aug 26", "value": 18500 },
+      { "date": "Sep 09", "value": 18100 },
+      { "date": "Sep 23", "value": 20200 },
+      { "date": "Oct 07", "value": 21800 },
+      { "date": "Oct 14", "value": 24392 }
+    ],
+    "1Y": [
+      { "date": "Oct 25", "value": 14200 },
+      { "date": "Dec 25", "value": 15600 },
+      { "date": "Feb 26", "value": 16100 },
+      { "date": "Apr 26", "value": 17400 },
+      { "date": "Jun 26", "value": 18900 },
+      { "date": "Aug 26", "value": 19800 },
+      { "date": "Oct 26", "value": 24392 }
+    ]
+  },
+  "holdings": [
+    {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "price": "$245.50",
+      "price_num": 245.50,
+      "change": "+2.1%",
+      "weight": "24.5%",
+      "weight_num": 24.5,
+      "shares": 24.3,
+      "avg_cost": "$212.40",
+      "market_value": "$5,965.65",
+      "unrealized_pnl": "+$804.33 (+15.6%)",
+      "sector": "Consumer Electronics & Services",
+      "beta": 1.12,
+      "color": "#94a3b8"
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft",
+      "price": "$521.40",
+      "price_num": 521.40,
+      "change": "+1.4%",
+      "weight": "18.2%",
+      "weight_num": 18.2,
+      "shares": 8.5,
+      "avg_cost": "$465.00",
+      "market_value": "$4,431.90",
+      "unrealized_pnl": "+$479.40 (+12.1%)",
+      "sector": "Enterprise Software & Cloud",
+      "beta": 1.08,
+      "color": "#60a5fa"
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "price": "$188.20",
+      "price_num": 188.20,
+      "change": "+3.8%",
+      "weight": "16.8%",
+      "weight_num": 16.8,
+      "shares": 21.8,
+      "avg_cost": "$142.10",
+      "market_value": "$4,102.76",
+      "unrealized_pnl": "+$1,004.98 (+32.4%)",
+      "sector": "Semiconductors & AI Compute",
+      "beta": 1.68,
+      "color": "#a3e635"
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet",
+      "price": "$245.10",
+      "price_num": 245.10,
+      "change": "-0.4%",
+      "weight": "12.6%",
+      "weight_num": 12.6,
+      "shares": 12.5,
+      "avg_cost": "$220.80",
+      "market_value": "$3,063.75",
+      "unrealized_pnl": "+$303.75 (+11.0%)",
+      "sector": "Digital Advertising & Cloud",
+      "beta": 1.15,
+      "color": "#fbbf24"
+    }
+  ],
+  "allocation": [
+    { "name": "Equities", "value": 62.4, "color": "#10b981", "amount": "$15,220.92" },
+    { "name": "ETFs", "value": 18.7, "color": "#38bdf8", "amount": "$4,561.40" },
+    { "name": "Crypto", "value": 8.3, "color": "#a78bfa", "amount": "$2,024.58" },
+    { "name": "Cash", "value": 6.1, "color": "#fbbf24", "amount": "$1,487.94" },
+    { "name": "Others", "value": 4.5, "color": "#64748b", "amount": "$1,097.66" }
+  ],
+  "insights": [
+    {
+      "id": "insight-1",
+      "tag": "MARKET SIGNAL",
+      "title": "Technology momentum is strengthening",
+      "icon": "Activity",
+      "description": "Semiconductor and AI compute names are displaying sustained relative volume breakout above their 50-day moving averages.",
+      "severity": "positive"
+    },
+    {
+      "id": "insight-2",
+      "tag": "PORTFOLIO",
+      "title": "Review your largest holding exposure",
+      "icon": "Wallet",
+      "description": "Your top holding (AAPL) represents 24.5% of total portfolio value. Consider setting rebalancing thresholds.",
+      "severity": "neutral"
+    },
+    {
+      "id": "insight-3",
+      "tag": "RISK ALERT",
+      "title": "Growth stocks may increase concentration risk",
+      "icon": "ShieldCheck",
+      "description": "Combined technology & semiconductor exposure stands at 72.1%, elevating your portfolio Beta to 1.24.",
+      "severity": "warning"
+    }
+  ],
+  "recent_transactions": [
+    {
+      "id": "tx-101",
+      "date": "2026-10-12",
+      "symbol": "NVDA",
+      "type": "BUY",
+      "shares": 5,
+      "price": 182.40,
+      "total": 912.00,
+      "status": "COMPLETED"
+    },
+    {
+      "id": "tx-102",
+      "date": "2026-10-04",
+      "symbol": "AAPL",
+      "type": "DIVIDEND",
+      "shares": 24.3,
+      "price": 0.25,
+      "total": 6.08,
+      "status": "CREDITED"
+    },
+    {
+      "id": "tx-103",
+      "date": "2026-09-28",
+      "symbol": "MSFT",
+      "type": "BUY",
+      "shares": 2.5,
+      "price": 508.10,
+      "total": 1270.25,
+      "status": "COMPLETED"
+    }
+  ]
+}

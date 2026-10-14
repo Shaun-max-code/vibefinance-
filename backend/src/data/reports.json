@@ -1,0 +1,63 @@
+[
+  {
+    "id": "REP-2026-W41",
+    "title": "Weekly Multi-Agent Intelligence Digest: Big Tech Capex & Options Skew",
+    "date": "2026-10-14",
+    "period": "Week 41, 2026",
+    "category": "Weekly Intelligence",
+    "author": "VibeFinance Multi-Agent Synthesis Engine",
+    "status": "PUBLISHED",
+    "summary": "Synthesizes momentum across US tech megacaps, shifts in put-call ratios, and corporate disclosure trends from recent SEC 10-Q filings.",
+    "key_takeaways": [
+      "Semiconductor momentum continues with NVDA testing resistance near $188, supported by low Put-Call Ratio (0.72).",
+      "Microsoft and Apple maintain solid gross margin expansion driven by enterprise cloud and high-margin services.",
+      "Portfolio concentration (HHI 2085) remains within acceptable bounds but warrants monitoring as NVDA weight climbs."
+    ],
+    "metrics_snapshot": {
+      "portfolio_return_week": "+2.4%",
+      "portfolio_value": "$24,392.50",
+      "top_contributor": "NVDA (+3.8%)",
+      "laggard": "GOOGL (-0.4%)"
+    }
+  },
+  {
+    "id": "REP-2026-M09",
+    "title": "Monthly Portfolio Risk & Concentration Audit",
+    "date": "2026-09-30",
+    "period": "September 2026",
+    "category": "Risk Audit",
+    "author": "Risk Agent (HHI & VaR Analyzer)",
+    "status": "ARCHIVED",
+    "summary": "Comprehensive assessment of portfolio drawdown exposure, asset diversification across equities, ETFs, crypto, and cash buffers.",
+    "key_takeaways": [
+      "95% 1-Day Value at Risk stood at $582.40 (2.39% of capital).",
+      "Cash reserve of $3,250.00 provides ample dry powder for tactical dollar-cost averaging.",
+      "No breach of 12.5% maximum drawdown threshold occurred during the September consolidation."
+    ],
+    "metrics_snapshot": {
+      "monthly_net_pnl": "+$1,840.50",
+      "sharpe_ratio": "1.82",
+      "beta": "1.24"
+    }
+  },
+  {
+    "id": "REP-2026-EQ-AAPL",
+    "title": "Equity Deep Dive: Apple Inc. (AAPL) Services Moat & Ecosystem Valuation",
+    "date": "2026-10-08",
+    "period": "Q4 2026",
+    "category": "Equity Research",
+    "author": "Research Agent (SEC Filing Corpus)",
+    "status": "PUBLISHED",
+    "summary": "Fundamental evaluation of Apple's 2.2B+ active installed base, high 74% Services gross margin, and Apple Intelligence compute rollout.",
+    "key_takeaways": [
+      "Services business has reached $96B run rate with 74% gross margin.",
+      "On-device neural engine deployments limit data center capex requirements compared to cloud peers.",
+      "Antitrust regulatory proceedings represent the primary non-financial valuation headwind."
+    ],
+    "metrics_snapshot": {
+      "current_price": "$245.50",
+      "target_price": "$270.00",
+      "conviction": "OVERWEIGHT"
+    }
+  }
+]

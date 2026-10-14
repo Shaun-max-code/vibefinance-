@@ -1,0 +1,70 @@
+{
+  "portfolio_metrics": {
+    "total_value": 24392.50,
+    "portfolio_beta": 1.24,
+    "hhi_concentration": 2085,
+    "hhi_status": "MODERATE_CONCENTRATION",
+    "hhi_description": "HHI between 1,500 and 2,500 indicates moderate concentration. Top holding AAPL represents 24.5% of allocation.",
+    "var_95_1day": {
+      "amount": 582.40,
+      "amount_formatted": "$582.40",
+      "percentage": "2.39%",
+      "confidence": "95%",
+      "time_horizon": "1 Day"
+    },
+    "max_drawdown_1y": "8.4%",
+    "sharpe_ratio": 1.82,
+    "sortino_ratio": 2.45,
+    "volatility_annualized": "16.8%"
+  },
+  "sector_weights": [
+    { "sector": "Consumer Electronics & Services", "weight": 24.5, "symbol": "AAPL" },
+    { "sector": "Enterprise Software & Cloud", "weight": 18.2, "symbol": "MSFT" },
+    { "sector": "Semiconductors & AI Compute", "weight": 16.8, "symbol": "NVDA" },
+    { "sector": "Digital Advertising & Search", "weight": 12.6, "symbol": "GOOGL" },
+    { "sector": "Cash & Liquidity", "weight": 13.3, "symbol": "CASH" },
+    { "sector": "Diversified / Crypto / ETFs", "weight": 14.6, "symbol": "MIXED" }
+  ],
+  "stress_scenarios": [
+    {
+      "id": "tech-pullback",
+      "name": "Tech Sector Multiple Contraction",
+      "trigger": "15% drawdown in high-multiple semiconductor & hyperscaler equities",
+      "estimated_pnl": -2410.00,
+      "estimated_pct": "-9.88%",
+      "projected_portfolio_value": "$21,982.50",
+      "primary_impacted_assets": ["NVDA", "MSFT", "AAPL"],
+      "agent_recommendation": "Maintain cash buffer of 13.3% and stagger limit orders at 200-day EMA support levels."
+    },
+    {
+      "id": "rate-hike-shock",
+      "name": "Yield Curve Spike (+50 bps Shock)",
+      "trigger": "Unanticipated inflation print drives 10-year US Treasury yield up 50 basis points",
+      "estimated_pnl": -1280.00,
+      "estimated_pct": "-5.25%",
+      "projected_portfolio_value": "$23,112.50",
+      "primary_impacted_assets": ["MSFT", "GOOGL"],
+      "agent_recommendation": "High cash-generative balance sheets in Apple & Microsoft mitigate terminal default risk."
+    },
+    {
+      "id": "broad-market-correction",
+      "name": "Broad Market Pullback (-5% S&P 500)",
+      "trigger": "Macro liquidity drain leading to synchronized 5% decline across major benchmarks",
+      "estimated_pnl": -1512.00,
+      "estimated_pct": "-6.20%",
+      "projected_portfolio_value": "$22,880.50",
+      "primary_impacted_assets": ["AAPL", "MSFT", "NVDA", "GOOGL"],
+      "agent_recommendation": "Portfolio Beta of 1.24 implies roughly 1.24x amplification of broader index moves."
+    },
+    {
+      "id": "ai-expansion-supercycle",
+      "name": "Hyperscaler Capex Surprise (+20% Expansion)",
+      "trigger": "Big tech earnings declare increased infrastructure budgets and accelerated inferencing deployment",
+      "estimated_pnl": 2180.00,
+      "estimated_pct": "+8.94%",
+      "projected_portfolio_value": "$26,572.50",
+      "primary_impacted_assets": ["NVDA", "MSFT"],
+      "agent_recommendation": "Consider harvesting partial gains if position weight in NVDA exceeds 20% to manage concentration risk."
+    }
+  ]
+}

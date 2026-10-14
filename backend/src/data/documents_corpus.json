@@ -1,0 +1,129 @@
+[
+  {
+    "id": "SEC-AAPL-2024-10K",
+    "symbol": "AAPL",
+    "company": "Apple Inc.",
+    "title": "Form 10-K Annual Report - Services & Hardware Gross Margins",
+    "category": "Regulatory Filing",
+    "date": "2024-11-01",
+    "filing_ref": "Item 7: Management's Discussion and Analysis",
+    "key_metrics": {
+      "revenue": "$391.0B",
+      "services_growth": "+12.8% YoY",
+      "gross_margin": "46.2%",
+      "services_gross_margin": "74.0%",
+      "net_cash_returned": "$95.1B"
+    },
+    "content": "Apple Inc. reported full-year revenue of $391.0 billion, driven by record Services revenue of $96.2 billion, up 12.8% year-over-year. Services gross margin reached 74.0%, expanding by 320 basis points due to high-margin Cloud Services and App Store ecosystem monetization. Products gross margin stood at 37.1%. The company maintained its target of achieving net cash neutrality over time, returning $95.1 billion to shareholders through repurchases and dividends. Working capital discipline reduced channel inventory days to 9 days. Key risk factors cited include EU Digital Markets Act compliance, antitrust litigation regarding default search agreements, and supply chain concentration in East Asia."
+  },
+  {
+    "id": "TRANS-AAPL-2024-Q4",
+    "symbol": "AAPL",
+    "company": "Apple Inc.",
+    "title": "Q4 Earnings Call Transcript - AI Infrastructure & Apple Intelligence",
+    "category": "Earnings Call",
+    "date": "2024-10-31",
+    "filing_ref": "CEO & CFO Opening Remarks",
+    "key_metrics": {
+      "installed_active_devices": "2.2B+",
+      "capex_h2": "$6.2B",
+      "rnd_intensity": "7.8% of sales"
+    },
+    "content": "Tim Cook, CEO: 'Apple Intelligence represents the next major paradigm for our ecosystem. We are deploying private cloud compute with Apple silicon servers alongside on-device neural engines. We are seeing unprecedented upgrade intent across the iPhone 16 family.' Luca Maestri, CFO: 'Our capital expenditure approach remains hybrid; we leverage our own silicon data centers while partnering with third-party cloud providers, keeping capital intensity significantly lower than hyper-scaler peers at roughly 2.5% of revenue.'"
+  },
+  {
+    "id": "SEC-NVDA-2025-Q2",
+    "symbol": "NVDA",
+    "company": "NVIDIA Corporation",
+    "title": "Form 10-Q Quarterly Report - Blackwell Architecture & Data Center Revenue",
+    "category": "Regulatory Filing",
+    "date": "2024-08-28",
+    "filing_ref": "Item 2: Financial Conditions - Data Center Segment",
+    "key_metrics": {
+      "data_center_rev": "$26.3B",
+      "gross_margin": "75.1%",
+      "blackwell_production_capex": "$3.4B",
+      "customer_concentration_top4": "42%"
+    },
+    "content": "NVIDIA Data Center segment delivered $26.3 billion, up 154% year-over-year, accounting for 87% of total company revenue. Blackwell architecture sample shipments commenced with full ramp scheduled for fiscal 2025. Non-GAAP gross margin contracted moderately to 75.1% from 78.4% in the prior quarter due to transition costs and low-yielding early packaging lots. Concentration risk remains notable: four cloud service provider customers accounted for approximately 42% of total revenue. Net cash from operations exceeded $14.5 billion. Export control restrictions to select geopolitical regions continue to require tailored localized architectures."
+  },
+  {
+    "id": "TRANS-NVDA-2025-Q2",
+    "symbol": "NVDA",
+    "company": "NVIDIA Corporation",
+    "title": "Q2 Earnings Call Transcript - Sovereign AI Demand & Supply Chain Constraints",
+    "category": "Earnings Call",
+    "date": "2024-08-28",
+    "filing_ref": "Executive Q&A Session",
+    "key_metrics": {
+      "sovereign_ai_pipeline": "$10B+",
+      "networking_spectrum_x": "+160% YoY"
+    },
+    "content": "Jensen Huang, CEO: 'Generative AI demand is not just from frontier model labs; Sovereign AI pipelines from national governments across Japan, France, India, and the Middle East are now approaching double-digit billions. Networking with Spectrum-X Ethernet is growing at triple digits, bridging Ethernet into generative compute clusters.' Colette Kress, CFO: 'Blackwell demand is well ahead of supply, and we expect supply constraints to persist into next year. Every dollar invested by cloud providers generates instantaneous monetization as token inferencing demand accelerates.'"
+  },
+  {
+    "id": "SEC-MSFT-2024-10K",
+    "symbol": "MSFT",
+    "company": "Microsoft Corporation",
+    "title": "Form 10-K Annual Report - Azure Cloud Infrastructure & Copilot Monetization",
+    "category": "Regulatory Filing",
+    "date": "2024-07-30",
+    "filing_ref": "Item 7: MD&A - Intelligent Cloud Segment",
+    "key_metrics": {
+      "azure_growth": "+29% YoY",
+      "commercial_cloud_margin": "71%",
+      "annual_capex": "$55.7B",
+      "commercial_rpo": "$268B"
+    },
+    "content": "Microsoft Cloud revenue grew 23% to $137.4 billion, with Azure and other cloud services growing 29%. Intelligent Cloud segment operating income rose to $44.6 billion. Capital expenditures including finance leases totaled $55.7 billion, driven by cloud and AI infrastructure buildouts across North America, Europe, and Asia-Pacific. Management anticipates fiscal 2025 capex to grow further to meet capacity demand. Commercial Remaining Performance Obligations (RPO) expanded to $268 billion, with 45% expected to be recognized over the next 12 months. Copilot adoption reached over 60% of Fortune 500 enterprises."
+  },
+  {
+    "id": "SEC-GOOGL-2024-10K",
+    "symbol": "GOOGL",
+    "company": "Alphabet Inc.",
+    "title": "Form 10-K Annual Report - Google Services, Cloud Profitability & Capex",
+    "category": "Regulatory Filing",
+    "date": "2024-02-05",
+    "filing_ref": "Item 7: MD&A - Google Cloud Operating Income",
+    "key_metrics": {
+      "search_revenue": "$175.0B",
+      "cloud_operating_income": "$3.1B",
+      "free_cash_flow": "$69.5B",
+      "capex_guidance": "$48B+"
+    },
+    "content": "Alphabet delivered consolidated revenues of $307.4 billion. Google Cloud maintained operating profitability, posting $3.1 billion in operating income on $33.1 billion in revenue, reflecting scaling efficiencies and enterprise Gemini deployments. Google Services delivered $76.3 billion in operating profit with search advertising revenue up 8% YoY. Capex expanded to $32.3 billion, with management noting that under-investing in AI compute infrastructure poses significantly greater strategic risks than over-investing. Department of Justice antitrust proceedings regarding search distribution agreements present ongoing structural considerations."
+  },
+  {
+    "id": "SEBI-REL-2024-Q3",
+    "symbol": "RELIANCE",
+    "company": "Reliance Industries Ltd.",
+    "title": "SEBI LODR Reg 30 Disclosure - Retail & Jio 5G Monetization & New Energy Capex",
+    "category": "Regulatory Disclosure",
+    "date": "2024-10-18",
+    "filing_ref": "SEBI/LODR/RIL-2024-Q3/DISC-42",
+    "key_metrics": {
+      "consolidated_ebitda": "₹43,934 Cr",
+      "net_debt_to_ebitda": "0.68x",
+      "jio_arpu": "₹195.1",
+      "green_energy_capex": "₹75,000 Cr committed"
+    },
+    "content": "Reliance Industries reported consolidated quarterly EBITDA of ₹43,934 Crore. Jio Infocomm ARPU expanded to ₹195.1 following tariff rationalization, while 5G subscriber additions crossed 148 million. Reliance Retail footprint reached 18,900 stores with digital commerce accounting for 18% of revenue. In the New Energy vertical, construction of the Dhirubhai Ambani Green Energy Giga Complex at Jamnagar reached advanced phases with solar PV gigafactory commissioning scheduled for FY25. Consolidated net debt to EBITDA remained comfortable at 0.68x, supported by strong operating cash flows from the Oil-to-Chemicals (O2C) segment."
+  },
+  {
+    "id": "SEBI-HDFC-2024-Q2",
+    "symbol": "HDFCBANK",
+    "company": "HDFC Bank Limited",
+    "title": "SEBI Disclosure - Post-Merger LDR Normalization & NIM Trajectory",
+    "category": "Regulatory Disclosure",
+    "date": "2024-10-19",
+    "filing_ref": "SEBI/LODR/HDFCBK-2024-Q2/FIN-88",
+    "key_metrics": {
+      "net_interest_margin": "3.46%",
+      "gross_npa": "1.36%",
+      "net_npa": "0.41%",
+      "credit_deposit_ratio": "99.8%",
+      "capital_adequacy_ratio": "19.8%"
+    },
+    "content": "HDFC Bank posted net profit growth of 5.3% YoY to ₹16,821 Crore. Post-merger Credit-to-Deposit Ratio (LDR) reduced to 99.8% from 110% through intentional credit growth calibration and granular retail deposit mobilization. Net Interest Margin (NIM) stabilized at 3.46% on total assets. Asset quality remained pristine with Gross NPA at 1.36% and Net NPA at 0.41%. Capital Adequacy Ratio (CAR) stood at a resilient 19.8% under Basel III guidelines. The bank reiterated its strategic focus on deposit accretion over aggressive balance sheet expansion over the next 4-6 quarters."
+  }
+]

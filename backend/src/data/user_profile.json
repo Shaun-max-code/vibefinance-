@@ -1,0 +1,46 @@
+{
+  "user": {
+    "name": "Shaun Mathew",
+    "email": "shaunmathew@example.com",
+    "workspace": "Personal workspace",
+    "initials": "S",
+    "plan": "VibeFinance Intelligence Pro",
+    "environment": "Demo environment",
+    "created_at": "2026-01-15T09:00:00Z",
+    "as_of_date": "OCTOBER 14, 2026"
+  },
+  "preferences": {
+    "base_currency": "USD",
+    "secondary_currency": "INR",
+    "risk_profile": "Balanced Compounder",
+    "risk_score": 6,
+    "max_drawdown_tolerance_pct": 12.5,
+    "target_cash_allocation_pct": 10.0,
+    "auto_rebalance_alerts": true,
+    "selected_benchmark": "S&P 500",
+    "theme": "dark"
+  },
+  "notifications": [
+    {
+      "id": "notif-1",
+      "timestamp": "2026-10-14T14:30:00Z",
+      "type": "RISK_ALERT",
+      "title": "NVDA Position Approaching 17% Weight",
+      "read": false
+    },
+    {
+      "id": "notif-2",
+      "timestamp": "2026-10-14T12:00:00Z",
+      "type": "MARKET_UPDATE",
+      "title": "US Technology index (NASDAQ) up +0.78% today",
+      "read": true
+    },
+    {
+      "id": "notif-3",
+      "timestamp": "2026-10-13T18:15:00Z",
+      "type": "AI_BRIEF",
+      "title": "Weekly Research Digest Ready for Review",
+      "read": true
+    }
+  ]
+}
