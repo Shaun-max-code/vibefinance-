@@ -8,7 +8,7 @@ import {
   Activity, ArrowDownRight, ArrowUpRight, Bell, BrainCircuit,
   BriefcaseBusiness, ChartNoAxesCombined, ChevronDown, FileText,
   LayoutDashboard, Menu, Search, Settings2, ShieldCheck,
-  Sparkles, Wallet, Zap,
+  Sparkles, Wallet, Zap, Globe, LogOut, LogIn
 } from 'lucide-react'
 import ResearchStudio from './ResearchStudio'
 import MarketsView from './components/MarketsView'
@@ -16,6 +16,9 @@ import PortfolioView from './components/PortfolioView'
 import RiskAnalysisView from './components/RiskAnalysisView'
 import ReportsView from './components/ReportsView'
 import SettingsView from './components/SettingsView'
+import LandingPage from './components/LandingPage'
+import AuthModal from './components/AuthModal'
+import './components/LandingAuth.css'
 import './components/Views.css'
 import './App.css'
 
@@ -79,6 +82,16 @@ function App() {
   const [active, setActive] = useState('Dashboard')
   const [question, setQuestion] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [viewMode, setViewMode] = useState('landing') // 'landing' | 'terminal'
+  const [authModal, setAuthModal] = useState(null) // 'login' | 'signup' | null
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('vibefinance_user')
+      return saved ? JSON.parse(saved) : null
+    } catch (e) {
+      return null
+    }
+  })
 
   const navigation = [
     { label: 'Dashboard', icon: LayoutDashboard },
@@ -97,12 +110,26 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      <aside className={`sidebar ${menuOpen ? 'sidebar-open' : ''}`}>
-        <div className="brand">
-          <div className="brand-mark"><Activity size={21} /></div>
-          <span>Vibe<span className="brand-accent">Finance</span></span>
-        </div>
+    <>
+      {viewMode === 'landing' ? (
+        <LandingPage
+          onLaunchTerminal={() => setViewMode('terminal')}
+          onOpenLogin={() => setAuthModal('login')}
+          onOpenSignup={() => setAuthModal('signup')}
+          currentUser={currentUser}
+        />
+      ) : (
+        <div className="app-shell">
+          <aside className={`sidebar ${menuOpen ? 'sidebar-open' : ''}`}>
+            <div
+              className="brand"
+              onClick={() => setViewMode('landing')}
+              style={{ cursor: 'pointer' }}
+              title="Return to Landing Page"
+            >
+              <div className="brand-mark"><Activity size={21} /></div>
+              <span>Vibe<span className="brand-accent">Finance</span></span>
+            </div>
 
         <div className="workspace-label">
           WORKSPACE <ChevronDown size={14} />
@@ -131,31 +158,41 @@ function App() {
           })}
         </nav>
 
-        <div className="sidebar-bottom">
-          <div className="promo-card">
-            <div className="promo-icon"><Zap size={17} /></div>
-            <strong>Intelligence, amplified.</strong>
-            <p>One question. Multiple perspectives.</p>
-            <button onClick={() => setActive('AI Research')}>
-              Explore AI <ArrowUpRight size={14} />
-            </button>
-          </div>
-
-          <button className="nav-item" onClick={() => setActive('Settings')}>
-            <Settings2 size={18} />
-            <span>Settings</span>
-          </button>
-
-          <div className="profile">
-            <div className="avatar">S</div>
-            <div className="profile-text">
-              <strong>Shaun Mathew</strong>
-              <span>Personal workspace</span>
+          <div className="sidebar-bottom">
+            <div className="promo-card">
+              <div className="promo-icon"><Zap size={17} /></div>
+              <strong>Intelligence, amplified.</strong>
+              <p>One question. Multiple perspectives.</p>
+              <button onClick={() => setActive('AI Research')}>
+                Explore AI <ArrowUpRight size={14} />
+              </button>
             </div>
-            <ChevronDown size={15} />
+
+            <button className="nav-item" onClick={() => setViewMode('landing')}>
+              <Globe size={18} />
+              <span>Landing Page</span>
+            </button>
+
+            <button className="nav-item" onClick={() => setActive('Settings')}>
+              <Settings2 size={18} />
+              <span>Settings</span>
+            </button>
+
+            <div
+              className="profile"
+              onClick={() => setAuthModal('login')}
+              style={{ cursor: 'pointer' }}
+              title="Account Settings / Switch User"
+            >
+              <div className="avatar">{currentUser ? (currentUser.initials || currentUser.name[0]) : 'S'}</div>
+              <div className="profile-text">
+                <strong>{currentUser ? currentUser.name : 'Shaun Mathew'}</strong>
+                <span>{currentUser ? currentUser.workspace : 'Personal workspace'}</span>
+              </div>
+              <ChevronDown size={15} />
+            </div>
           </div>
-        </div>
-      </aside>
+        </aside>
 
       {menuOpen && (
         <button
@@ -184,10 +221,50 @@ function App() {
 
           <div className="top-actions">
             <span className="date-label">OCTOBER 14, 2026</span>
+            <button
+              className="landing-login-btn"
+              style={{ fontSize: '11px', padding: '5px 11px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+              onClick={() => setViewMode('landing')}
+              title="Return to Landing Page"
+            >
+              <Globe size={13} /> Home
+            </button>
+
+            {currentUser ? (
+              <button
+                className="landing-login-btn"
+                style={{ fontSize: '11px', padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                onClick={() => {
+                  localStorage.removeItem('vibefinance_user')
+                  localStorage.removeItem('vibefinance_token')
+                  setCurrentUser(null)
+                  setViewMode('landing')
+                }}
+                title="Sign Out"
+              >
+                <LogOut size={13} /> Sign Out
+              </button>
+            ) : (
+              <button
+                className="ask-button"
+                style={{ fontSize: '11px', padding: '5px 11px' }}
+                onClick={() => setAuthModal('login')}
+              >
+                Sign In
+              </button>
+            )}
+
             <button className="icon-button notification" aria-label="Notifications">
               <Bell size={18} /><i />
             </button>
-            <div className="avatar small-avatar">S</div>
+            <div
+              className="avatar small-avatar"
+              onClick={() => setAuthModal('login')}
+              style={{ cursor: 'pointer' }}
+              title="User Account"
+            >
+              {currentUser ? (currentUser.initials || currentUser.name[0]) : 'S'}
+            </div>
           </div>
         </header>
 
@@ -460,6 +537,19 @@ function App() {
         </div>
       </main>
     </div>
+      )}
+
+      {authModal && (
+        <AuthModal
+          initialMode={authModal}
+          onClose={() => setAuthModal(null)}
+          onLoginSuccess={(user) => {
+            setCurrentUser(user)
+            setViewMode('terminal')
+          }}
+        />
+      )}
+    </>
   )
 }
 

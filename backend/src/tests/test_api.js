@@ -126,6 +126,26 @@ async function runTests() {
     assert(res.timing_metrics.total_pipeline_latency_ms >= 0);
   });
 
+  // 5. Auth Controller
+  test('Auth controller handles login and signup', () => {
+    const authController = require('../controllers/auth_controller');
+    let loginData = null;
+    authController.login(
+      { body: { email: 'shaunmathew@example.com', password: 'password123' } },
+      { json: (d) => { loginData = d; }, status: () => ({ json: (d) => { loginData = d; } }) }
+    );
+    assert(loginData.success, 'Login should succeed for default user');
+    assert.strictEqual(loginData.user.name, 'Shaun Mathew');
+
+    let signupData = null;
+    authController.signup(
+      { body: { name: 'Priya Sharma', email: 'priya@example.com', password: 'securePass123', risk_profile: 'Aggressive' } },
+      { json: (d) => { signupData = d; }, status: () => ({ json: (d) => { signupData = d; } }) }
+    );
+    assert(signupData.success, 'Signup should succeed for new user');
+    assert.strictEqual(signupData.user.name, 'Priya Sharma');
+  });
+
   console.log(`\nTest results: ${passed}/${total} passed.`);
   if (passed === total) {
     console.log('✓ All tests passed successfully!');

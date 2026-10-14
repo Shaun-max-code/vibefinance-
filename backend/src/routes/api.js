@@ -8,8 +8,10 @@ const portfolioRoutes = require('./portfolio');
 const riskRoutes = require('./risk');
 const reportsRoutes = require('./reports');
 const userRoutes = require('./user');
+const authRoutes = require('./auth');
 
 // Mount sub-routers
+router.use('/auth', authRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/markets', marketsRoutes);
 router.use('/research', researchRoutes);
