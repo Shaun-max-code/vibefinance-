@@ -197,6 +197,28 @@ function App() {
     }
   })
 
+  // Dynamic time-of-day greeting (Good morning / Good afternoon / Good evening)
+  const [greeting, setGreeting] = useState(() => {
+    const hour = new Date().getHours()
+    if (hour >= 4 && hour < 12) return 'Good morning'
+    if (hour >= 12 && hour < 17) return 'Good afternoon'
+    return 'Good evening'
+  })
+
+  useEffect(() => {
+    const updateGreeting = () => {
+      const hour = new Date().getHours()
+      if (hour >= 4 && hour < 12) setGreeting('Good morning')
+      else if (hour >= 12 && hour < 17) setGreeting('Good afternoon')
+      else setGreeting('Good evening')
+    }
+    updateGreeting()
+    const timer = setInterval(updateGreeting, 60000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const userName = currentUser ? (currentUser.name?.split(' ')[0] || currentUser.name) : 'Shaun'
+
   const navigation = [
     { label: 'Dashboard', icon: LayoutDashboard },
     { label: 'Markets', icon: ChartNoAxesCombined },
@@ -554,7 +576,9 @@ function App() {
           </div>
 
           <div className="top-actions">
-            <span className="date-label">OCTOBER 14, 2026</span>
+            <span className="date-label">
+              {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}
+            </span>
             <MagneticButton strength={0.2} maxOffset={6}>
               <button
                 className="landing-login-btn magnetic-btn hover-lift"
@@ -639,7 +663,7 @@ function App() {
                       <span className="live-dot radar-dot" />
                       YOUR FINANCIAL COMMAND CENTER
                     </div>
-                    <h1>Good afternoon, Shaun <span className="wave">✳</span></h1>
+                    <h1>{greeting}, {userName} <span className="wave">✳</span></h1>
                     <p>Your money, the markets, and the bigger picture.</p>
                   </div>
                   <span className="market-status glass-panel">
