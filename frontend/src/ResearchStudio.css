@@ -520,3 +520,44 @@
   .rs-composer-footer button { padding: 10px 8px; }
   .rs-answer { padding: 12px; }
 }
+
+/* Glassmorphism & Hover Micro-Animations for Research Studio */
+.rs-agent-panel,
+.rs-workspace,
+.rs-answer {
+  background: rgba(13, 20, 33, 0.76) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 14px 35px -10px rgba(0, 0, 0, 0.55),
+              0 0 25px -5px rgba(16, 185, 129, 0.05) !important;
+}
+
+.rs-agent {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.2s,
+              border-color 0.2s,
+              box-shadow 0.2s !important;
+}
+
+.rs-agent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+.rs-agent:hover .rs-agent-avatar {
+  transform: rotate(10deg) scale(1.1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rs-composer-wrap {
+  background: rgba(9, 15, 25, 0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.rs-composer-wrap:focus-within {
+  border-color: #34d399 !important;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.16) !important;
+}
+

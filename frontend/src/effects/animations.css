@@ -1,0 +1,616 @@
+/* ==========================================================================
+   VibeFinance - State of the Art Animation & Visual Effects System
+   Features:
+   - Smooth page transitions
+   - Magnetic spotlight & ambient cursor glow
+   - Parallax scrolling layers & 3D tilt
+   - Glassmorphism & levitating floating cards
+   - Interactive hover micro-animations (lift, glow, icon spin)
+   - Scroll-triggered reveals
+   - Animated hero aurora & particle meshes
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. KEYFRAME ANIMATIONS
+   -------------------------------------------------------------------------- */
+
+/* Fluid Shimmer for Headings & Text */
+@keyframes textShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Organic Aurora Background Drift */
+@keyframes auroraPulse {
+  0%, 100% {
+    transform: scale(1) translate(0px, 0px);
+    opacity: 0.65;
+  }
+  33% {
+    transform: scale(1.15) translate(30px, -20px);
+    opacity: 0.85;
+  }
+  66% {
+    transform: scale(0.95) translate(-25px, 25px);
+    opacity: 0.6;
+  }
+}
+
+@keyframes auroraShiftSecondary {
+  0%, 100% {
+    transform: scale(1) translate(0px, 0px);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2) translate(-40px, -30px);
+    opacity: 0.75;
+  }
+}
+
+/* Floating Levitations (staggered for organic feeling) */
+@keyframes floatGentle1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+@keyframes floatGentle2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(-0.7deg);
+  }
+}
+
+@keyframes floatGentle3 {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Pulse Glow */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.2), 0 0 30px rgba(52, 211, 153, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(52, 211, 153, 0.45), 0 0 50px rgba(52, 211, 153, 0.15);
+  }
+}
+
+/* Button Shine Sweep */
+@keyframes buttonShine {
+  0% {
+    left: -120%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+/* Page Transition In & Out */
+@keyframes pageSlideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pageSlideFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.995);
+  }
+}
+
+/* Grid Line Scan Effect */
+@keyframes gridScan {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* Live Dot Pulse */
+@keyframes liveDotRadar {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. PAGE TRANSITIONS
+   -------------------------------------------------------------------------- */
+
+.page-transition-container {
+  width: 100%;
+  position: relative;
+}
+
+.page-transition-active {
+  animation: pageSlideFadeIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* --------------------------------------------------------------------------
+   3. GLOBAL CURSOR SPOTLIGHT & AMBIENT GLOW
+   -------------------------------------------------------------------------- */
+
+.global-cursor-spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 600px;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle 280px at center,
+    rgba(52, 211, 153, 0.045) 0%,
+    rgba(56, 189, 248, 0.02) 45%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+
+@media (max-width: 768px) {
+  .global-cursor-spotlight {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. SPOTLIGHT CARD EFFECTS (CARD FOLLOWS MOUSE)
+   -------------------------------------------------------------------------- */
+
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-color: rgba(52, 211, 153, 0.12);
+  --spotlight-border-color: rgba(52, 211, 153, 0.4);
+}
+
+/* Soft light following cursor on the card surface */
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--spotlight-color, rgba(52, 211, 153, 0.12)),
+    transparent 65%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+
+/* Dynamic glowing border tracking cursor */
+.spotlight-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--spotlight-border-color, rgba(52, 211, 153, 0.4)),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 2;
+}
+
+.spotlight-card:hover::before,
+.spotlight-card:hover::after {
+  opacity: 1;
+}
+
+/* Variant spotlight colors */
+.spotlight-blue {
+  --spotlight-color: rgba(56, 189, 248, 0.13);
+  --spotlight-border-color: rgba(56, 189, 248, 0.45);
+}
+
+.spotlight-purple {
+  --spotlight-color: rgba(167, 139, 250, 0.14);
+  --spotlight-border-color: rgba(167, 139, 250, 0.45);
+}
+
+.spotlight-amber {
+  --spotlight-color: rgba(251, 191, 36, 0.13);
+  --spotlight-border-color: rgba(251, 191, 36, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   5. MAGNETIC BUTTONS
+   -------------------------------------------------------------------------- */
+
+.magnetic-wrapper {
+  display: inline-block;
+  position: relative;
+  transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+.magnetic-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease,
+              background-color 0.2s ease,
+              border-color 0.2s ease;
+}
+
+/* Sleek light shine effect across button on hover */
+.magnetic-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.magnetic-btn:hover::after {
+  animation: buttonShine 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.magnetic-btn:hover {
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.4),
+              0 0 15px rgba(52, 211, 153, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   6. GLASSMORPHISM & TRANSLUCENCY
+   -------------------------------------------------------------------------- */
+
+.glass-panel {
+  background: rgba(13, 20, 33, 0.72) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 14px 35px -10px rgba(0, 0, 0, 0.55),
+              0 0 30px -5px rgba(16, 185, 129, 0.05),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.glass-panel-elevated {
+  background: rgba(15, 23, 38, 0.8) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75),
+              0 0 40px -5px rgba(52, 211, 153, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+/* Subtle frosted badge */
+.glass-badge {
+  background: rgba(16, 185, 129, 0.12) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(52, 211, 153, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   7. FLOATING LEVITATING EFFECTS
+   -------------------------------------------------------------------------- */
+
+.float-slow-1 {
+  animation: floatGentle1 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.float-slow-2 {
+  animation: floatGentle2 8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.float-slow-3 {
+  animation: floatGentle3 5.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   8. INTERACTIVE HOVER ANIMATIONS
+   -------------------------------------------------------------------------- */
+
+/* Cards lift slightly & shadows deepen */
+.hover-lift {
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+  will-change: transform, box-shadow;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7),
+              0 0 25px rgba(52, 211, 153, 0.14);
+  border-color: rgba(52, 211, 153, 0.45);
+}
+
+/* Icons rotate and bounce inside interactive items */
+.hover-icon-rotate {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+button:hover .hover-icon-rotate,
+.insight-row:hover .hover-icon-rotate,
+.feature-card:hover .hover-icon-rotate,
+.landing-agent-card:hover .hover-icon-rotate,
+.metric-card:hover .hover-icon-rotate {
+  transform: rotate(12deg) scale(1.18);
+}
+
+/* --------------------------------------------------------------------------
+   9. SCROLL-TRIGGERED ANIMATIONS
+   -------------------------------------------------------------------------- */
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Horizontal slide reveal */
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-left.reveal-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-right.reveal-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger delays */
+.delay-1 { transition-delay: 0.08s; }
+.delay-2 { transition-delay: 0.16s; }
+.delay-3 { transition-delay: 0.24s; }
+.delay-4 { transition-delay: 0.32s; }
+.delay-5 { transition-delay: 0.4s; }
+
+/* --------------------------------------------------------------------------
+   10. ANIMATED HERO SECTION STYLES
+   -------------------------------------------------------------------------- */
+
+.hero-aurora-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1400px;
+  height: 650px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-aurora-blob-1 {
+  position: absolute;
+  top: -15%;
+  left: 20%;
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(16, 185, 129, 0.24) 0%,
+    rgba(6, 78, 59, 0.12) 50%,
+    transparent 75%
+  );
+  filter: blur(75px);
+  animation: auroraPulse 14s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.hero-aurora-blob-2 {
+  position: absolute;
+  top: -8%;
+  right: 18%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.22) 0%,
+    rgba(14, 116, 144, 0.1) 50%,
+    transparent 75%
+  );
+  filter: blur(80px);
+  animation: auroraShiftSecondary 16s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.hero-aurora-blob-3 {
+  position: absolute;
+  top: 25%;
+  left: 45%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(167, 139, 250, 0.16) 0%,
+    rgba(109, 40, 217, 0.06) 50%,
+    transparent 75%
+  );
+  filter: blur(90px);
+  animation: auroraPulse 19s ease-in-out infinite alternate-reverse;
+  will-change: transform, opacity;
+}
+
+/* Subtle cybernetic perspective grid in hero */
+.hero-cyber-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(27, 41, 59, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 41, 59, 0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 80%);
+  opacity: 0.65;
+  pointer-events: none;
+  animation: gridScan 35s linear infinite;
+}
+
+/* Shimmering hero headline */
+.gradient-text-animated {
+  background: linear-gradient(
+    135deg,
+    #34d399 0%,
+    #60a5fa 35%,
+    #a78bfa 70%,
+    #34d399 100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 8s linear infinite;
+}
+
+/* Floating 3D badges around hero */
+.floating-hero-badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(13, 20, 33, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6),
+              0 0 20px rgba(52, 211, 153, 0.15);
+  pointer-events: none;
+  z-index: 5;
+}
+
+@media (max-width: 900px) {
+  .floating-hero-badge {
+    display: none;
+  }
+}
+
+.floating-hero-badge.badge-left {
+  top: 120px;
+  left: 20px;
+}
+
+.floating-hero-badge.badge-right {
+  top: 160px;
+  right: 25px;
+}
+
+/* Interactive particle canvas */
+.hero-particle-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 3D Tilt Container for Terminal Preview */
+.tilt-card-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.tilt-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+/* Radar pulse dot */
+.radar-dot {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  animation: liveDotRadar 2.2s ease-out infinite;
+}

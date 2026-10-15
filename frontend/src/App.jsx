@@ -18,6 +18,11 @@ import ReportsView from './components/ReportsView'
 import SettingsView from './components/SettingsView'
 import LandingPage from './components/LandingPage'
 import AuthModal from './components/AuthModal'
+import GlobalCursorSpotlight from './effects/GlobalCursorSpotlight'
+import SpotlightCard from './effects/SpotlightCard'
+import MagneticButton from './effects/MagneticButton'
+import ScrollReveal from './effects/ScrollReveal'
+import SmoothTransition from './effects/SmoothTransition'
 import './components/LandingAuth.css'
 import './components/Views.css'
 import './App.css'
@@ -143,18 +148,18 @@ const initialNotifications = [
   { id: 4, title: 'Weekly Intelligence Published', body: 'Dossier REP-2026-W41 is ready for inspection.', time: '1d ago', unread: false, target: 'Reports' },
 ]
 
-function Metric({ title, value, change, icon: Icon }) {
+function Metric({ title, value, change, icon: Icon, variant = 'green' }) {
   return (
-    <article className="metric-card">
+    <SpotlightCard variant={variant} className="metric-card glass-panel hover-lift">
       <div className="metric-heading">
         <span>{title}</span>
-        <Icon size={17} />
+        <Icon size={17} className="hover-icon-rotate" />
       </div>
       <div className="metric-value">{value}</div>
       <div className="metric-change">
-        <ArrowUpRight size={14} /> {change}
+        <ArrowUpRight size={14} className="hover-icon-rotate" /> {change}
       </div>
-    </article>
+    </SpotlightCard>
   )
 }
 
@@ -295,26 +300,28 @@ function App() {
 
   return (
     <>
-      {viewMode === 'landing' ? (
-        <LandingPage
-          onLaunchTerminal={() => setViewMode('terminal')}
-          onOpenLogin={() => setAuthModal('login')}
-          onOpenSignup={() => setAuthModal('signup')}
-          onLogout={handleLogout}
-          currentUser={currentUser}
-        />
-      ) : (
-        <div className="app-shell">
-          <aside className={`sidebar ${menuOpen ? 'sidebar-open' : ''}`}>
-            <div
-              className="brand"
-              onClick={() => setViewMode('landing')}
-              style={{ cursor: 'pointer' }}
-              title="Return to Landing Page"
-            >
-              <div className="brand-mark"><Activity size={21} /></div>
-              <span>Vibe<span className="brand-accent">Finance</span></span>
-            </div>
+      <GlobalCursorSpotlight />
+      <SmoothTransition viewKey={viewMode}>
+        {viewMode === 'landing' ? (
+          <LandingPage
+            onLaunchTerminal={() => setViewMode('terminal')}
+            onOpenLogin={() => setAuthModal('login')}
+            onOpenSignup={() => setAuthModal('signup')}
+            onLogout={handleLogout}
+            currentUser={currentUser}
+          />
+        ) : (
+          <div className="app-shell">
+            <aside className={`sidebar ${menuOpen ? 'sidebar-open' : ''} glass-panel`}>
+              <div
+                className="brand"
+                onClick={() => setViewMode('landing')}
+                style={{ cursor: 'pointer' }}
+                title="Return to Landing Page"
+              >
+                <div className="brand-mark hover-icon-rotate"><Activity size={21} /></div>
+                <span>Vibe<span className="brand-accent">Finance</span></span>
+              </div>
 
         <div className="workspace-label">
           WORKSPACE <ChevronDown size={14} />
@@ -344,14 +351,14 @@ function App() {
         </nav>
 
           <div className="sidebar-bottom">
-            <div className="promo-card">
-              <div className="promo-icon"><Zap size={17} /></div>
+            <SpotlightCard className="promo-card glass-panel hover-lift" variant="green">
+              <div className="promo-icon hover-icon-rotate"><Zap size={17} /></div>
               <strong>Intelligence, amplified.</strong>
               <p>One question. Multiple perspectives.</p>
               <button onClick={() => { setQuestion(''); setActive('AI Research'); }}>
-                Explore AI <ArrowUpRight size={14} />
+                Explore AI <ArrowUpRight size={14} className="hover-icon-rotate" />
               </button>
-            </div>
+            </SpotlightCard>
 
             <button className="nav-item" onClick={() => setViewMode('landing')}>
               <Globe size={18} />
@@ -527,23 +534,27 @@ function App() {
 
           <div className="top-actions">
             <span className="date-label">OCTOBER 14, 2026</span>
-            <button
-              className="landing-login-btn"
-              style={{ fontSize: '11px', padding: '5px 11px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
-              onClick={() => setViewMode('landing')}
-              title="Return to Landing Page"
-            >
-              <Globe size={13} /> Home
-            </button>
+            <MagneticButton strength={0.2} maxOffset={6}>
+              <button
+                className="landing-login-btn magnetic-btn hover-lift"
+                style={{ fontSize: '11px', padding: '5px 11px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                onClick={() => setViewMode('landing')}
+                title="Return to Landing Page"
+              >
+                <Globe size={13} className="hover-icon-rotate" /> Home
+              </button>
+            </MagneticButton>
 
             {/* Prominent Log Out button always available */}
-            <button
-              className="topbar-logout-btn"
-              onClick={handleLogout}
-              title="Log Out from workspace"
-            >
-              <LogOut size={13} /> Log Out
-            </button>
+            <MagneticButton strength={0.2} maxOffset={6}>
+              <button
+                className="topbar-logout-btn magnetic-btn hover-lift"
+                onClick={handleLogout}
+                title="Log Out from workspace"
+              >
+                <LogOut size={13} className="hover-icon-rotate" /> Log Out
+              </button>
+            </MagneticButton>
 
             {/* Notifications with interactive popover */}
             <div className="notifications-wrap" ref={notifRef}>
@@ -598,285 +609,300 @@ function App() {
         </header>
 
         <div className="page-content">
-          {active === 'Dashboard' ? (
-            <>
-              <section className="welcome">
-                <div>
-                  <div className="eyebrow">
-                    <span className="live-dot" />
-                    YOUR FINANCIAL COMMAND CENTER
+          <SmoothTransition viewKey={active}>
+            {active === 'Dashboard' ? (
+              <>
+                <section className="welcome">
+                  <div>
+                    <div className="eyebrow">
+                      <span className="live-dot radar-dot" />
+                      YOUR FINANCIAL COMMAND CENTER
+                    </div>
+                    <h1>Good afternoon, Shaun <span className="wave">✳</span></h1>
+                    <p>Your money, the markets, and the bigger picture.</p>
                   </div>
-                  <h1>Good afternoon, Shaun <span className="wave">✳</span></h1>
-                  <p>Your money, the markets, and the bigger picture.</p>
+                  <span className="market-status glass-panel">
+                    <span className="live-dot radar-dot" /> Demo environment
+                  </span>
+                </section>
+
+                <form className="ai-prompt glass-panel" onSubmit={askResearch}>
+                  <div className="prompt-icon"><Sparkles size={19} className="hover-icon-rotate" /></div>
+                  <input
+                    value={question}
+                    onChange={event => setQuestion(event.target.value)}
+                    placeholder="Ask about markets, companies, or portfolio risk..."
+                    aria-label="Ask VibeFinance AI"
+                  />
+                  <MagneticButton strength={0.25} maxOffset={8}>
+                    <button type="submit" className="ask-button magnetic-btn">
+                      Ask AI <ArrowUpRight size={15} className="hover-icon-rotate" />
+                    </button>
+                  </MagneticButton>
+                </form>
+
+                <div className="demo-note">
+                  <Activity size={13} />
+                  DEMO DATA · NOT LIVE FINANCIAL INFORMATION
                 </div>
-                <span className="market-status">
-                  <span className="live-dot" /> Demo environment
-                </span>
-              </section>
 
-              <form className="ai-prompt" onSubmit={askResearch}>
-                <div className="prompt-icon"><Sparkles size={19} /></div>
-                <input
-                  value={question}
-                  onChange={event => setQuestion(event.target.value)}
-                  placeholder="Ask about markets, companies, or portfolio risk..."
-                  aria-label="Ask VibeFinance AI"
-                />
-                <button type="submit" className="ask-button">
-                  Ask AI <ArrowUpRight size={15} />
-                </button>
-              </form>
+                <ScrollReveal direction="up">
+                  <section className="metrics-grid">
+                    <Metric title="Portfolio value" value="$24,392.50" change="+2.4% today" icon={Wallet} variant="green" />
+                    <Metric title="Daily P&L" value="+$588.20" change="+2.47% today" icon={Activity} variant="blue" />
+                    <Metric title="Total return" value="+18.6%" change="+$3,832.20 all time" icon={ChartNoAxesCombined} variant="purple" />
+                    <Metric title="Cash balance" value="$3,250.00" change="13.3% of portfolio" icon={BriefcaseBusiness} variant="amber" />
+                  </section>
+                </ScrollReveal>
 
-              <div className="demo-note">
-                <Activity size={13} />
-                DEMO DATA · NOT LIVE FINANCIAL INFORMATION
-              </div>
-
-              <section className="metrics-grid">
-                <Metric title="Portfolio value" value="$24,392.50" change="+2.4% today" icon={Wallet} />
-                <Metric title="Daily P&L" value="+$588.20" change="+2.47% today" icon={Activity} />
-                <Metric title="Total return" value="+18.6%" change="+$3,832.20 all time" icon={ChartNoAxesCombined} />
-                <Metric title="Cash balance" value="$3,250.00" change="13.3% of portfolio" icon={BriefcaseBusiness} />
-              </section>
-
-              <section className="primary-grid">
-                <article className="panel performance-panel">
-                  <div className="section-heading">
-                    <div>
-                      <h2>Portfolio performance</h2>
-                      <p>Track how your portfolio moves over time</p>
-                    </div>
-                    <span className="subtle-badge">Illustrative</span>
-                  </div>
-
-                  <div className="chart-summary">
-                    <div>
-                      <div className="chart-total">
-                        {performanceDataByPeriod[period]?.summary || '$24,392.50'}
+                <ScrollReveal direction="up" delay={1}>
+                  <section className="primary-grid">
+                    <SpotlightCard className="panel performance-panel glass-panel hover-lift">
+                      <div className="section-heading">
+                        <div>
+                          <h2>Portfolio performance</h2>
+                          <p>Track how your portfolio moves over time</p>
+                        </div>
+                        <span className="subtle-badge">Illustrative</span>
                       </div>
-                      <div className="positive">
-                        <ArrowUpRight size={15} /> {performanceDataByPeriod[period]?.change || '+$3,832.20 (+18.6%)'}
-                      </div>
-                    </div>
-                    <div className="periods">
-                      {['1D', '1W', '1M', '3M', '1Y'].map(value => (
-                        <button
-                          key={value}
-                          type="button"
-                          className={period === value ? 'period-active' : ''}
-                          onClick={() => setPeriod(value)}
-                        >
-                          {value}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
 
-                  <div className="chart-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart
-                        data={performanceDataByPeriod[period]?.data || performanceDataByPeriod['1M'].data}
-                        margin={{ top: 12, right: 8, left: -18, bottom: 0 }}
-                      >
-                        <defs>
-                          <linearGradient id="fillPortfolio" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#10b981" stopOpacity={0.25} />
-                            <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid stroke="#1e293b" strokeDasharray="3 5" vertical={false} />
-                        <XAxis dataKey="date" tick={{ fill: '#8492a6', fontSize: 10 }} axisLine={false} tickLine={false} dy={10} />
-                        <YAxis tick={{ fill: '#8492a6', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={value => `$${Math.round(value / 1000)}k`} />
-                        <Tooltip
-                          contentStyle={{ background: '#101a2a', border: '1px solid #26364b', borderRadius: 10, color: '#f1f5f9' }}
-                          formatter={value => [`$${Number(value).toLocaleString()}`, 'Portfolio']}
-                        />
-                        <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2.5} fill="url(#fillPortfolio)" activeDot={{ r: 5, fill: '#34d399' }} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  <div className="chart-footer">
-                    <span><i className="legend-dot" /> Portfolio value ({period})</span>
-                    <span>Historical values · Demo only</span>
-                  </div>
-                </article>
-
-                <article className="panel allocation-panel">
-                  <div className="section-heading">
-                    <div>
-                      <h2>Asset allocation</h2>
-                      <p>How your assets are distributed</p>
-                    </div>
-                  </div>
-
-                  <div className="donut-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie data={allocation} dataKey="value" nameKey="name" innerRadius={64} outerRadius={87} paddingAngle={4} stroke="none">
-                          {allocation.map(item => (
-                            <Cell key={item.name} fill={item.color} />
+                      <div className="chart-summary">
+                        <div>
+                          <div className="chart-total">
+                            {performanceDataByPeriod[period]?.summary || '$24,392.50'}
+                          </div>
+                          <div className="positive">
+                            <ArrowUpRight size={15} /> {performanceDataByPeriod[period]?.change || '+$3,832.20 (+18.6%)'}
+                          </div>
+                        </div>
+                        <div className="periods">
+                          {['1D', '1W', '1M', '3M', '1Y'].map(value => (
+                            <button
+                              key={value}
+                              type="button"
+                              className={period === value ? 'period-active' : ''}
+                              onClick={() => setPeriod(value)}
+                            >
+                              {value}
+                            </button>
                           ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{ background: '#101a2a', border: '1px solid #26364b', borderRadius: 10, color: '#f1f5f9' }}
-                          formatter={value => [`${value}%`, 'Allocation']}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="donut-center">
-                      <strong>$24.4k</strong>
-                      <span>Total assets</span>
-                    </div>
-                  </div>
-
-                  <div className="allocation-list">
-                    {allocation.map(item => (
-                      <div className="allocation-row" key={item.name}>
-                        <span><i style={{ background: item.color }} />{item.name}</span>
-                        <strong>{item.value}%</strong>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </article>
-              </section>
 
-              <section className="lower-grid">
-                <article className="panel holdings-panel">
-                  <div className="section-heading">
-                    <div>
-                      <h2>Top holdings</h2>
-                      <p>Your portfolio at a glance</p>
-                    </div>
-                    <button className="text-action" onClick={() => setActive('Portfolio')}>
-                      View all <ArrowUpRight size={14} />
-                    </button>
-                  </div>
+                      <div className="chart-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart
+                            data={performanceDataByPeriod[period]?.data || performanceDataByPeriod['1M'].data}
+                            margin={{ top: 12, right: 8, left: -18, bottom: 0 }}
+                          >
+                            <defs>
+                              <linearGradient id="fillPortfolio" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#10b981" stopOpacity={0.25} />
+                                <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid stroke="#1e293b" strokeDasharray="3 5" vertical={false} />
+                            <XAxis dataKey="date" tick={{ fill: '#8492a6', fontSize: 10 }} axisLine={false} tickLine={false} dy={10} />
+                            <YAxis tick={{ fill: '#8492a6', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={value => `$${Math.round(value / 1000)}k`} />
+                            <Tooltip
+                              contentStyle={{ background: '#101a2a', border: '1px solid #26364b', borderRadius: 10, color: '#f1f5f9' }}
+                              formatter={value => [`$${Number(value).toLocaleString()}`, 'Portfolio']}
+                            />
+                            <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2.5} fill="url(#fillPortfolio)" activeDot={{ r: 5, fill: '#34d399' }} />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
 
-                  <div className="table-wrap">
-                    <table>
-                      <thead>
-                        <tr><th>ASSET</th><th>PRICE</th><th>24H</th><th>WEIGHT</th></tr>
-                      </thead>
-                      <tbody>
-                        {holdings.map(item => (
-                          <tr key={item.symbol}>
-                            <td>
-                              <div className="asset-cell">
-                                <span className="asset-icon" style={{ color: item.color }}>{item.symbol[0]}</span>
-                                <div><strong>{item.symbol}</strong><small>{item.name}</small></div>
-                              </div>
-                            </td>
-                            <td>{item.price}</td>
-                            <td className={item.change.startsWith('+') ? 'positive' : 'negative'}>{item.change}</td>
-                            <td>{item.weight}</td>
-                          </tr>
+                      <div className="chart-footer">
+                        <span><i className="legend-dot" /> Portfolio value ({period})</span>
+                        <span>Historical values · Demo only</span>
+                      </div>
+                    </SpotlightCard>
+
+                    <SpotlightCard className="panel allocation-panel glass-panel hover-lift" variant="blue">
+                      <div className="section-heading">
+                        <div>
+                          <h2>Asset allocation</h2>
+                          <p>How your assets are distributed</p>
+                        </div>
+                      </div>
+
+                      <div className="donut-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie data={allocation} dataKey="value" nameKey="name" innerRadius={64} outerRadius={87} paddingAngle={4} stroke="none">
+                              {allocation.map(item => (
+                                <Cell key={item.name} fill={item.color} />
+                              ))}
+                            </Pie>
+                            <Tooltip
+                              contentStyle={{ background: '#101a2a', border: '1px solid #26364b', borderRadius: 10, color: '#f1f5f9' }}
+                              formatter={value => [`${value}%`, 'Allocation']}
+                            />
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div className="donut-center">
+                          <strong>$24.4k</strong>
+                          <span>Total assets</span>
+                        </div>
+                      </div>
+
+                      <div className="allocation-list">
+                        {allocation.map(item => (
+                          <div className="allocation-row" key={item.name}>
+                            <span><i style={{ background: item.color }} />{item.name}</span>
+                            <strong>{item.value}%</strong>
+                          </div>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </article>
-
-                <article className="panel market-panel">
-                  <div className="section-heading">
-                    <div>
-                      <h2>Market pulse</h2>
-                      <p>Selected market indicators</p>
-                    </div>
-                    <button className="icon-button" onClick={() => setActive('Markets')} aria-label="Open markets">
-                      <ArrowUpRight size={16} />
-                    </button>
-                  </div>
-
-                  <div className="market-list">
-                    {markets.map((item, index) => (
-                      <div className="market-row" key={item.name}>
-                        <span className={`market-icon market-${index}`}>{item.name[0]}</span>
-                        <div className="market-name">
-                          <strong>{item.name}</strong>
-                          <small>{['US large-cap', 'US technology', 'Indian equities', 'Digital asset'][index]}</small>
-                        </div>
-                        <div className="market-value">
-                          <strong>{item.value}</strong>
-                          <span className={item.change.startsWith('+') ? 'positive' : 'negative'}>{item.change}</span>
-                        </div>
                       </div>
-                    ))}
-                  </div>
-                  <p className="market-disclaimer">Illustrative values · Not live quotes</p>
-                </article>
+                    </SpotlightCard>
+                  </section>
+                </ScrollReveal>
 
-                <article className="panel insights-panel">
-                  <div className="section-heading">
-                    <div>
-                      <h2>AI intelligence</h2>
-                      <p>Signals to explore</p>
-                    </div>
-                    <span className="ai-badge"><Sparkles size={12} /> AI</span>
-                  </div>
-
-                  <div className="insights-list">
-                    {insights.map(item => {
-                      const Icon = item.icon
-                      return (
-                        <button
-                          key={item.title}
-                          className="insight-row"
-                          onClick={() => handleAskInsight(item)}
-                          title="Click to analyze with AI"
-                        >
-                          <span className="insight-icon"><Icon size={17} /></span>
-                          <span className="insight-copy">
-                            <small>{item.tag}</small>
-                            <strong>{item.title}</strong>
-                            <span>Click to analyze in AI Research</span>
-                          </span>
-                          <ArrowUpRight size={15} />
+                <ScrollReveal direction="up" delay={2}>
+                  <section className="lower-grid">
+                    <SpotlightCard className="panel holdings-panel glass-panel hover-lift">
+                      <div className="section-heading">
+                        <div>
+                          <h2>Top holdings</h2>
+                          <p>Your portfolio at a glance</p>
+                        </div>
+                        <button className="text-action" onClick={() => setActive('Portfolio')}>
+                          View all <ArrowUpRight size={14} className="hover-icon-rotate" />
                         </button>
-                      )
-                    })}
-                  </div>
+                      </div>
 
-                  <button className="research-button" onClick={() => { setQuestion(''); setActive('AI Research'); }}>
-                    <BrainCircuit size={16} /> Open Research Studio <ArrowUpRight size={15} />
+                      <div className="table-wrap">
+                        <table>
+                          <thead>
+                            <tr><th>ASSET</th><th>PRICE</th><th>24H</th><th>WEIGHT</th></tr>
+                          </thead>
+                          <tbody>
+                            {holdings.map(item => (
+                              <tr key={item.symbol}>
+                                <td>
+                                  <div className="asset-cell">
+                                    <span className="asset-icon hover-icon-rotate" style={{ color: item.color }}>{item.symbol[0]}</span>
+                                    <div><strong>{item.symbol}</strong><small>{item.name}</small></div>
+                                  </div>
+                                </td>
+                                <td>{item.price}</td>
+                                <td className={item.change.startsWith('+') ? 'positive' : 'negative'}>{item.change}</td>
+                                <td>{item.weight}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </SpotlightCard>
+
+                    <SpotlightCard className="panel market-panel glass-panel hover-lift" variant="amber">
+                      <div className="section-heading">
+                        <div>
+                          <h2>Market pulse</h2>
+                          <p>Selected market indicators</p>
+                        </div>
+                        <button className="icon-button" onClick={() => setActive('Markets')} aria-label="Open markets">
+                          <ArrowUpRight size={16} className="hover-icon-rotate" />
+                        </button>
+                      </div>
+
+                      <div className="market-list">
+                        {markets.map((item, index) => (
+                          <div className="market-row" key={item.name}>
+                            <span className={`market-icon market-${index}`}>{item.name[0]}</span>
+                            <div className="market-name">
+                              <strong>{item.name}</strong>
+                              <small>{['US large-cap', 'US technology', 'Indian equities', 'Digital asset'][index]}</small>
+                            </div>
+                            <div className="market-value">
+                              <strong>{item.value}</strong>
+                              <span className={item.change.startsWith('+') ? 'positive' : 'negative'}>{item.change}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="market-disclaimer">Illustrative values · Not live quotes</p>
+                    </SpotlightCard>
+
+                    <SpotlightCard className="panel insights-panel glass-panel hover-lift" variant="purple">
+                      <div className="section-heading">
+                        <div>
+                          <h2>AI intelligence</h2>
+                          <p>Signals to explore</p>
+                        </div>
+                        <span className="ai-badge glass-badge"><Sparkles size={12} className="hover-icon-rotate" /> AI</span>
+                      </div>
+
+                      <div className="insights-list">
+                        {insights.map(item => {
+                          const Icon = item.icon
+                          return (
+                            <button
+                              key={item.title}
+                              className="insight-row hover-lift glass-panel"
+                              onClick={() => handleAskInsight(item)}
+                              title="Click to analyze with AI"
+                            >
+                              <span className="insight-icon hover-icon-rotate"><Icon size={17} /></span>
+                              <span className="insight-copy">
+                                <small>{item.tag}</small>
+                                <strong>{item.title}</strong>
+                                <span>Click to analyze in AI Research</span>
+                              </span>
+                              <ArrowUpRight size={15} className="hover-icon-rotate" />
+                            </button>
+                          )
+                        })}
+                      </div>
+
+                      <MagneticButton strength={0.2} maxOffset={8} style={{ width: '100%', marginTop: '12px' }}>
+                        <button className="research-button magnetic-btn hover-lift" onClick={() => { setQuestion(''); setActive('AI Research'); }}>
+                          <BrainCircuit size={16} className="hover-icon-rotate" /> Open Research Studio <ArrowUpRight size={15} />
+                        </button>
+                      </MagneticButton>
+                    </SpotlightCard>
+                  </section>
+                </ScrollReveal>
+
+                <footer className="footer">
+                  <span>VibeFinance <span className="slash">/</span> Financial intelligence, in context.</span>
+                  <span><span className="live-dot radar-dot" /> Demo environment</span>
+                </footer>
+              </>
+            ) : active === 'AI Research' ? (
+              <ResearchStudio initialQuestion={question} />
+            ) : active === 'Markets' ? (
+              <MarketsView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+            ) : active === 'Portfolio' ? (
+              <PortfolioView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+            ) : active === 'Risk Analysis' ? (
+              <RiskAnalysisView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+            ) : active === 'Reports' ? (
+              <ReportsView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
+            ) : active === 'Settings' ? (
+              <SettingsView onLogout={handleLogout} />
+            ) : (
+              <SpotlightCard className="panel placeholder-page glass-panel">
+                <div className="placeholder-icon hover-icon-rotate">
+                  <LayoutDashboard size={28} />
+                </div>
+                <span className="eyebrow">VIBEFINANCE WORKSPACE</span>
+                <h1>{active}</h1>
+                <p>Workspace section.</p>
+                <MagneticButton strength={0.25} maxOffset={8}>
+                  <button className="ask-button magnetic-btn" onClick={() => setActive('Dashboard')}>
+                    Back to dashboard <ArrowUpRight size={15} />
                   </button>
-                </article>
-              </section>
-
-              <footer className="footer">
-                <span>VibeFinance <span className="slash">/</span> Financial intelligence, in context.</span>
-                <span><span className="live-dot" /> Demo environment</span>
-              </footer>
-            </>
-          ) : active === 'AI Research' ? (
-            <ResearchStudio initialQuestion={question} />
-          ) : active === 'Markets' ? (
-            <MarketsView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
-          ) : active === 'Portfolio' ? (
-            <PortfolioView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
-          ) : active === 'Risk Analysis' ? (
-            <RiskAnalysisView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
-          ) : active === 'Reports' ? (
-            <ReportsView onNavigateToResearch={q => { setQuestion(q); setActive('AI Research'); }} />
-          ) : active === 'Settings' ? (
-            <SettingsView onLogout={handleLogout} />
-          ) : (
-            <section className="panel placeholder-page">
-              <div className="placeholder-icon">
-                <LayoutDashboard size={28} />
-              </div>
-              <span className="eyebrow">VIBEFINANCE WORKSPACE</span>
-              <h1>{active}</h1>
-              <p>Workspace section.</p>
-              <button className="ask-button" onClick={() => setActive('Dashboard')}>
-                Back to dashboard <ArrowUpRight size={15} />
-              </button>
-            </section>
-          )}
+                </MagneticButton>
+              </SpotlightCard>
+            )}
+          </SmoothTransition>
         </div>
       </main>
     </div>
       )}
+    </SmoothTransition>
 
       {authModal && (
         <AuthModal
