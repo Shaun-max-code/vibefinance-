@@ -1,4 +1,4 @@
-# VibeFinance · Multi-Agent Autonomous Financial Intelligence
+# vibefinance- · Multi-Agent Autonomous Financial Intelligence
 
 [![React 19](https://img.shields.io/badge/React-19.2-61dafb?style=flat&logo=react)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8.3-646cff?style=flat&logo=vite)](https://vitejs.dev/)
