@@ -23,6 +23,7 @@ import SpotlightCard from './effects/SpotlightCard'
 import MagneticButton from './effects/MagneticButton'
 import ScrollReveal from './effects/ScrollReveal'
 import SmoothTransition from './effects/SmoothTransition'
+import Tilt3DCard from './effects/Tilt3DCard'
 import './components/LandingAuth.css'
 import './components/Views.css'
 import './App.css'
@@ -150,16 +151,16 @@ const initialNotifications = [
 
 function Metric({ title, value, change, icon: Icon, variant = 'green' }) {
   return (
-    <SpotlightCard variant={variant} className="metric-card glass-panel hover-lift">
-      <div className="metric-heading">
+    <Tilt3DCard maxTilt={8} variant={variant} className="metric-card glass-panel hover-lift">
+      <div className="metric-heading depth-layer-1">
         <span>{title}</span>
         <Icon size={17} className="hover-icon-rotate" />
       </div>
-      <div className="metric-value">{value}</div>
-      <div className="metric-change">
+      <div className="metric-value depth-layer-2">{value}</div>
+      <div className="metric-change depth-layer-1">
         <ArrowUpRight size={14} className="hover-icon-rotate" /> {change}
       </div>
-    </SpotlightCard>
+    </Tilt3DCard>
   )
 }
 

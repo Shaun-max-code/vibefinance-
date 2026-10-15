@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   Activity, ArrowUpRight, BrainCircuit, ShieldCheck,
   TrendingUp, Sparkles, ChevronRight, Lock, CheckCircle,
-  BarChart3, Globe, Zap, ArrowRight, User
+  BarChart3, Globe, Zap, ArrowRight, User, Layers, Crosshair
 } from 'lucide-react'
 
 import GlobalCursorSpotlight from '../effects/GlobalCursorSpotlight'
@@ -10,11 +10,13 @@ import SpotlightCard from '../effects/SpotlightCard'
 import MagneticButton from '../effects/MagneticButton'
 import HeroCanvas from '../effects/HeroCanvas'
 import ScrollReveal from '../effects/ScrollReveal'
-import { useParallaxScroll, use3DTilt } from '../effects/useParallax'
+import Tilt3DCard from '../effects/Tilt3DCard'
+import { useParallaxScroll } from '../effects/useParallax'
+import SelfDrawingArchitectureDiagram from './SelfDrawingArchitectureDiagram'
+import RiskThreatRadar from './RiskThreatRadar'
 
 export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignup, onLogout, currentUser }) {
   const scrollY = useParallaxScroll()
-  const { tiltProps } = use3DTilt(4)
 
   return (
     <div className="landing-page">
@@ -31,9 +33,10 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
 
           <nav className="landing-links">
             <a href="#features">Features</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#threat-radar">Threat Radar</a>
             <a href="#agents">AI Agents</a>
             <a href="#terminal">Terminal Preview</a>
-            <a href="#risk">Risk Engine</a>
           </nav>
 
           <div className="landing-nav-actions">
@@ -147,107 +150,120 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
           )}
         </div>
 
-        {/* Live Metrics Ticker Bar (Frosted Glassmorphism) */}
-        <div className="hero-ticker-bar glass-panel hover-lift" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="ticker-item">
+        {/* Live Metrics Ticker Bar (Frosted Glassmorphism with 3D Depth) */}
+        <Tilt3DCard maxTilt={5} scale={1.01} className="hero-ticker-bar glass-panel hover-lift" style={{ position: 'relative', zIndex: 2 }}>
+          <div className="ticker-item depth-layer-1">
             <small>S&P 500</small>
             <strong>6,742.18</strong>
             <span className="positive">+1.13%</span>
           </div>
-          <div className="ticker-item">
+          <div className="ticker-item depth-layer-1">
             <small>NASDAQ 100</small>
             <strong>23,016.32</strong>
             <span className="positive">+0.78%</span>
           </div>
-          <div className="ticker-item">
+          <div className="ticker-item depth-layer-1">
             <small>NIFTY 50</small>
             <strong>24,716.30</strong>
             <span className="negative">-0.90%</span>
           </div>
-          <div className="ticker-item">
+          <div className="ticker-item depth-layer-1">
             <small>BTC / USD</small>
             <strong>$112,420</strong>
             <span className="positive">+2.40%</span>
           </div>
-          <div className="ticker-item">
+          <div className="ticker-item depth-layer-1">
             <small>PORTFOLIO VaR</small>
             <strong>$582.40</strong>
             <span className="neutral-tag">95% 1-Day</span>
           </div>
-        </div>
+        </Tilt3DCard>
       </section>
 
-      {/* Live Terminal Preview with 3D Interactive Tilt & Magnetic Spotlight */}
+      {/* Live Terminal Preview with 3D Depth, Perspective Tilt & Shifting Shadows */}
       <section className="terminal-preview-section" id="terminal">
         <ScrollReveal direction="up" threshold={0.1}>
-          <div className="tilt-card-container">
-            <SpotlightCard
-              {...tiltProps}
-              className="terminal-window glass-panel-elevated tilt-card"
-            >
-              <div className="terminal-window-header">
-                <div className="window-dots">
-                  <span className="dot-red" />
-                  <span className="dot-yellow" />
-                  <span className="dot-green" />
+          <Tilt3DCard
+            maxTilt={6}
+            scale={1.015}
+            className="terminal-window glass-panel-elevated"
+          >
+            <div className="terminal-window-header depth-layer-1">
+              <div className="window-dots">
+                <span className="dot-red" />
+                <span className="dot-yellow" />
+                <span className="dot-green" />
+              </div>
+              <div className="window-title">VibeFinance Terminal · Workspace / Dashboard</div>
+              <div className="window-badge">
+                <span className="radar-dot" style={{ display: 'inline-block', marginRight: '5px' }} />
+                LIVE DEMO
+              </div>
+            </div>
+
+            <div className="terminal-window-body depth-layer-2">
+              <div className="preview-metrics-row">
+                <div className="preview-metric glass-panel hover-lift depth-layer-1">
+                  <small>PORTFOLIO VALUE</small>
+                  <strong>$24,392.50</strong>
+                  <span className="positive">+2.4% today</span>
                 </div>
-                <div className="window-title">VibeFinance Terminal · Workspace / Dashboard</div>
-                <div className="window-badge">
-                  <span className="radar-dot" style={{ display: 'inline-block', marginRight: '5px' }} />
-                  LIVE DEMO
+                <div className="preview-metric glass-panel hover-lift depth-layer-1">
+                  <small>DAILY P&L</small>
+                  <strong>+$588.20</strong>
+                  <span className="positive">+2.47%</span>
+                </div>
+                <div className="preview-metric glass-panel hover-lift depth-layer-1">
+                  <small>CONCENTRATION (HHI)</small>
+                  <strong>2,085</strong>
+                  <span style={{ color: '#fbbf24' }}>Moderate</span>
+                </div>
+                <div className="preview-metric glass-panel hover-lift depth-layer-1">
+                  <small>WEIGHTED BETA</small>
+                  <strong>1.25</strong>
+                  <span>Relative to S&P</span>
                 </div>
               </div>
 
-              <div className="terminal-window-body">
-                <div className="preview-metrics-row">
-                  <div className="preview-metric glass-panel hover-lift">
-                    <small>PORTFOLIO VALUE</small>
-                    <strong>$24,392.50</strong>
-                    <span className="positive">+2.4% today</span>
-                  </div>
-                  <div className="preview-metric glass-panel hover-lift">
-                    <small>DAILY P&L</small>
-                    <strong>+$588.20</strong>
-                    <span className="positive">+2.47%</span>
-                  </div>
-                  <div className="preview-metric glass-panel hover-lift">
-                    <small>CONCENTRATION (HHI)</small>
-                    <strong>2,085</strong>
-                    <span style={{ color: '#fbbf24' }}>Moderate</span>
-                  </div>
-                  <div className="preview-metric glass-panel hover-lift">
-                    <small>WEIGHTED BETA</small>
-                    <strong>1.25</strong>
-                    <span>Relative to S&P</span>
-                  </div>
+              <div className="preview-agents-banner depth-layer-1">
+                <div className="agent-pill pill-market float-slow-1">
+                  <TrendingUp size={14} className="hover-icon-rotate" /> Market Agent: Momentum Breakout
                 </div>
-
-                <div className="preview-agents-banner">
-                  <div className="agent-pill pill-market float-slow-1">
-                    <TrendingUp size={14} className="hover-icon-rotate" /> Market Agent: Momentum Breakout
-                  </div>
-                  <div className="agent-pill pill-research float-slow-2">
-                    <BrainCircuit size={14} className="hover-icon-rotate" /> Research Agent: SEC 10-K RAG Verified
-                  </div>
-                  <div className="agent-pill pill-risk float-slow-3">
-                    <ShieldCheck size={14} className="hover-icon-rotate" /> Risk Agent: HHI Threshold Guarded
-                  </div>
+                <div className="agent-pill pill-research float-slow-2">
+                  <BrainCircuit size={14} className="hover-icon-rotate" /> Research Agent: SEC 10-K RAG Verified
                 </div>
-
-                <div className="preview-cta-overlay">
-                  <MagneticButton strength={0.3} maxOffset={10}>
-                    <button className="ask-button magnetic-btn hover-lift" onClick={onLaunchTerminal}>
-                      Explore Full Interactive Terminal &rarr;
-                    </button>
-                  </MagneticButton>
+                <div className="agent-pill pill-risk float-slow-3">
+                  <ShieldCheck size={14} className="hover-icon-rotate" /> Risk Agent: HHI Threshold Guarded
                 </div>
               </div>
-            </SpotlightCard>
-          </div>
+
+              <div className="preview-cta-overlay depth-layer-2">
+                <MagneticButton strength={0.3} maxOffset={10}>
+                  <button className="ask-button magnetic-btn hover-lift" onClick={onLaunchTerminal}>
+                    Explore Full Interactive Terminal &rarr;
+                  </button>
+                </MagneticButton>
+              </div>
+            </div>
+          </Tilt3DCard>
         </ScrollReveal>
       </section>
 
-      {/* Pillars / Features Section with Staggered Scroll Reveal */}
+      {/* Progressive Self-Drawing System Architecture Section */}
+      <section id="architecture">
+        <ScrollReveal direction="up">
+          <SelfDrawingArchitectureDiagram />
+        </ScrollReveal>
+      </section>
+
+      {/* Live Data-Reactive Threat Radar Scanner Section */}
+      <section id="threat-radar" style={{ maxWidth: '1250px', margin: '0 auto 80px', padding: '0 24px' }}>
+        <ScrollReveal direction="up">
+          <RiskThreatRadar onSelectScenario={onLaunchTerminal} />
+        </ScrollReveal>
+      </section>
+
+      {/* Pillars / Features Section with 3D Depth Cards & Specular Glare */}
       <section className="landing-features" id="features">
         <ScrollReveal direction="up">
           <div className="section-eyebrow">
@@ -262,40 +278,40 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
 
         <div className="features-grid">
           <ScrollReveal delay={1} direction="up">
-            <SpotlightCard className="feature-card glass-panel hover-lift">
-              <div className="feature-icon"><BrainCircuit size={22} className="hover-icon-rotate" /></div>
-              <h3>Multi-Agent Reasoning</h3>
-              <p>Three specialized AI agents analyze price momentum, corporate filings, and downside concentration in parallel, with automated conflict resolution.</p>
-            </SpotlightCard>
+            <Tilt3DCard maxTilt={8} variant="green" className="feature-card glass-panel hover-lift">
+              <div className="feature-icon depth-layer-2"><BrainCircuit size={22} className="hover-icon-rotate" /></div>
+              <h3 className="depth-layer-1">Multi-Agent Reasoning</h3>
+              <p className="depth-layer-1">Three specialized AI agents analyze price momentum, corporate filings, and downside concentration in parallel, with automated conflict resolution.</p>
+            </Tilt3DCard>
           </ScrollReveal>
 
           <ScrollReveal delay={2} direction="up">
-            <SpotlightCard className="feature-card glass-panel hover-lift" variant="blue">
-              <div className="feature-icon"><Globe size={22} className="hover-icon-rotate" /></div>
-              <h3>Grounded RAG Corpus</h3>
-              <p>Every fundamental thesis links directly to citations in verified SEC 10-K, 10-Q reports and earnings conference call transcripts.</p>
-            </SpotlightCard>
+            <Tilt3DCard maxTilt={8} variant="blue" className="feature-card glass-panel hover-lift">
+              <div className="feature-icon depth-layer-2"><Globe size={22} className="hover-icon-rotate" /></div>
+              <h3 className="depth-layer-1">Grounded RAG Corpus</h3>
+              <p className="depth-layer-1">Every fundamental thesis links directly to citations in verified SEC 10-K, 10-Q reports and earnings conference call transcripts.</p>
+            </Tilt3DCard>
           </ScrollReveal>
 
           <ScrollReveal delay={3} direction="up">
-            <SpotlightCard className="feature-card glass-panel hover-lift" variant="purple">
-              <div className="feature-icon"><ShieldCheck size={22} className="hover-icon-rotate" /></div>
-              <h3>Mathematical Risk Limits</h3>
-              <p>Real-time calculation of Herfindahl-Hirschman Index (HHI), weighted portfolio Beta, and 95% Parametric 1-Day Value-at-Risk (VaR).</p>
-            </SpotlightCard>
+            <Tilt3DCard maxTilt={8} variant="purple" className="feature-card glass-panel hover-lift">
+              <div className="feature-icon depth-layer-2"><ShieldCheck size={22} className="hover-icon-rotate" /></div>
+              <h3 className="depth-layer-1">Mathematical Risk Limits</h3>
+              <p className="depth-layer-1">Real-time calculation of Herfindahl-Hirschman Index (HHI), weighted portfolio Beta, and 95% Parametric 1-Day Value-at-Risk (VaR).</p>
+            </Tilt3DCard>
           </ScrollReveal>
 
           <ScrollReveal delay={4} direction="up">
-            <SpotlightCard className="feature-card glass-panel hover-lift" variant="amber">
-              <div className="feature-icon"><BarChart3 size={22} className="hover-icon-rotate" /></div>
-              <h3>Macro Scenario Stress Tests</h3>
-              <p>Simulate how rate hikes, semiconductor contraction, or broad selloffs will affect your specific portfolio before executing trades.</p>
-            </SpotlightCard>
+            <Tilt3DCard maxTilt={8} variant="amber" className="feature-card glass-panel hover-lift">
+              <div className="feature-icon depth-layer-2"><BarChart3 size={22} className="hover-icon-rotate" /></div>
+              <h3 className="depth-layer-1">Macro Scenario Stress Tests</h3>
+              <p className="depth-layer-1">Simulate how rate hikes, semiconductor contraction, or broad selloffs will affect your specific portfolio before executing trades.</p>
+            </Tilt3DCard>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Meet Your AI Team Section */}
+      {/* Meet Your AI Team Section with 3D Depth Cards */}
       <section className="landing-agents" id="agents">
         <ScrollReveal direction="up">
           <div className="section-eyebrow">
@@ -306,41 +322,41 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
 
         <div className="agents-grid">
           <ScrollReveal delay={1} direction="up">
-            <SpotlightCard variant="green" className="landing-agent-card agent-border-green glass-panel hover-lift">
-              <div className="agent-avatar rs-green hover-icon-rotate"><TrendingUp size={20} /></div>
-              <h3>Market Agent</h3>
-              <span className="agent-role">Technical & Momentum Analyst</span>
-              <p>Studies multi-timeframe price action, 20/50/200-day EMAs, RSI(14) divergences, volume surges, and options Put-Call Ratio (PCR).</p>
-            </SpotlightCard>
+            <Tilt3DCard variant="green" maxTilt={8} className="landing-agent-card agent-border-green glass-panel hover-lift">
+              <div className="agent-avatar rs-green hover-icon-rotate depth-layer-2"><TrendingUp size={20} /></div>
+              <h3 className="depth-layer-1">Market Agent</h3>
+              <span className="agent-role depth-layer-1">Technical & Momentum Analyst</span>
+              <p className="depth-layer-1">Studies multi-timeframe price action, 20/50/200-day EMAs, RSI(14) divergences, volume surges, and options Put-Call Ratio (PCR).</p>
+            </Tilt3DCard>
           </ScrollReveal>
 
           <ScrollReveal delay={2} direction="up">
-            <SpotlightCard variant="blue" className="landing-agent-card agent-border-blue glass-panel hover-lift">
-              <div className="agent-avatar rs-blue hover-icon-rotate"><BrainCircuit size={20} /></div>
-              <h3>Research Agent</h3>
-              <span className="agent-role">Corporate & Sector Analyst</span>
-              <p>Indexes regulatory filings, tracks gross margin trajectory, monitors capex cycles, and verifies disclosures with exact document citations.</p>
-            </SpotlightCard>
+            <Tilt3DCard variant="blue" maxTilt={8} className="landing-agent-card agent-border-blue glass-panel hover-lift">
+              <div className="agent-avatar rs-blue hover-icon-rotate depth-layer-2"><BrainCircuit size={20} /></div>
+              <h3 className="depth-layer-1">Research Agent</h3>
+              <span className="agent-role depth-layer-1">Corporate & Sector Analyst</span>
+              <p className="depth-layer-1">Indexes regulatory filings, tracks gross margin trajectory, monitors capex cycles, and verifies disclosures with exact document citations.</p>
+            </Tilt3DCard>
           </ScrollReveal>
 
           <ScrollReveal delay={3} direction="up">
-            <SpotlightCard variant="purple" className="landing-agent-card agent-border-purple glass-panel hover-lift">
-              <div className="agent-avatar rs-purple hover-icon-rotate"><ShieldCheck size={20} /></div>
-              <h3>Risk Agent</h3>
-              <span className="agent-role">Downside & Exposure Analyst</span>
-              <p>Quantifies portfolio concentration (HHI), stress-tests macro scenarios, calculates parametric VaR, and protects cash buffers.</p>
-            </SpotlightCard>
+            <Tilt3DCard variant="purple" maxTilt={8} className="landing-agent-card agent-border-purple glass-panel hover-lift">
+              <div className="agent-avatar rs-purple hover-icon-rotate depth-layer-2"><ShieldCheck size={20} /></div>
+              <h3 className="depth-layer-1">Risk Agent</h3>
+              <span className="agent-role depth-layer-1">Downside & Exposure Analyst</span>
+              <p className="depth-layer-1">Quantifies portfolio concentration (HHI), stress-tests macro scenarios, calculates parametric VaR, and protects cash buffers.</p>
+            </Tilt3DCard>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Call to Action Banner with Glassmorphism & Magnetic Buttons */}
+      {/* Call to Action Banner with 3D Depth & Magnetic Buttons */}
       <section className="landing-cta-banner">
         <ScrollReveal direction="up">
-          <SpotlightCard className="cta-banner-inner glass-panel-elevated">
-            <h2>Ready to upgrade your financial intelligence?</h2>
-            <p>Experience multi-agent autonomous reasoning backed by synthetic market feeds and institutional risk analytics.</p>
-            <div className="cta-btns">
+          <Tilt3DCard maxTilt={5} className="cta-banner-inner glass-panel-elevated">
+            <h2 className="depth-layer-1">Ready to upgrade your financial intelligence?</h2>
+            <p className="depth-layer-1">Experience multi-agent autonomous reasoning backed by synthetic market feeds and institutional risk analytics.</p>
+            <div className="cta-btns depth-layer-2">
               <MagneticButton strength={0.3} maxOffset={12}>
                 <button className="ask-button hero-main-btn magnetic-btn hover-lift" onClick={onLaunchTerminal}>
                   Enter Workspace Now <ArrowUpRight size={15} className="hover-icon-rotate" />
@@ -354,7 +370,7 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
                 </MagneticButton>
               )}
             </div>
-          </SpotlightCard>
+          </Tilt3DCard>
         </ScrollReveal>
       </section>
 

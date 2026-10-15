@@ -3,6 +3,8 @@ import {
   ShieldCheck, AlertTriangle, Activity, TrendingDown,
   BarChart2, Zap, ArrowDownRight, ArrowUpRight, Sparkles, Sliders
 } from 'lucide-react'
+import RiskThreatRadar from './RiskThreatRadar'
+import Tilt3DCard from '../effects/Tilt3DCard'
 
 const initialRiskData = {
   metrics: {
@@ -122,52 +124,60 @@ export default function RiskAnalysisView({ onNavigateToResearch }) {
         )}
       </div>
 
-      {/* Core Risk Metrics Grid */}
+      {/* Core Risk Metrics Grid with 3D Depth */}
       <div className="metrics-grid">
-        <article className="metric-card">
-          <div className="metric-heading">
+        <Tilt3DCard maxTilt={7} variant="amber" className="metric-card glass-panel hover-lift">
+          <div className="metric-heading depth-layer-1">
             <span>Concentration (HHI)</span>
-            <ShieldCheck size={17} />
+            <ShieldCheck size={17} className="hover-icon-rotate" />
           </div>
-          <div className="metric-value">{riskData.metrics.hhi.score}</div>
-          <div className="metric-change" style={{ color: '#fbbf24' }}>
+          <div className="metric-value depth-layer-2">{riskData.metrics.hhi.score}</div>
+          <div className="metric-change depth-layer-1" style={{ color: '#fbbf24' }}>
             <AlertTriangle size={14} /> Moderate Concentration
           </div>
-        </article>
+        </Tilt3DCard>
 
-        <article className="metric-card">
-          <div className="metric-heading">
+        <Tilt3DCard maxTilt={7} variant="blue" className="metric-card glass-panel hover-lift">
+          <div className="metric-heading depth-layer-1">
             <span>Portfolio Beta</span>
-            <Activity size={17} />
+            <Activity size={17} className="hover-icon-rotate" />
           </div>
-          <div className="metric-value">{riskData.metrics.portfolio_beta}</div>
-          <div className="metric-change">
+          <div className="metric-value depth-layer-2">{riskData.metrics.portfolio_beta}</div>
+          <div className="metric-change depth-layer-1">
             1.25x market sensitivity
           </div>
-        </article>
+        </Tilt3DCard>
 
-        <article className="metric-card">
-          <div className="metric-heading">
+        <Tilt3DCard maxTilt={7} variant="green" className="metric-card glass-panel hover-lift">
+          <div className="metric-heading depth-layer-1">
             <span>95% 1-Day VaR</span>
-            <TrendingDown size={17} />
+            <TrendingDown size={17} className="hover-icon-rotate" />
           </div>
-          <div className="metric-value">{riskData.metrics.var_95.amount_formatted}</div>
-          <div className="metric-change negative">
+          <div className="metric-value depth-layer-2">{riskData.metrics.var_95.amount_formatted}</div>
+          <div className="metric-change depth-layer-1 negative">
             {riskData.metrics.var_95.percentage} daily boundary
           </div>
-        </article>
+        </Tilt3DCard>
 
-        <article className="metric-card">
-          <div className="metric-heading">
+        <Tilt3DCard maxTilt={7} variant="purple" className="metric-card glass-panel hover-lift">
+          <div className="metric-heading depth-layer-1">
             <span>Max Drawdown (1Y)</span>
-            <BarChart2 size={17} />
+            <BarChart2 size={17} className="hover-icon-rotate" />
           </div>
-          <div className="metric-value">{riskData.metrics.max_drawdown_1y}</div>
-          <div className="metric-change">
+          <div className="metric-value depth-layer-2">{riskData.metrics.max_drawdown_1y}</div>
+          <div className="metric-change depth-layer-1">
             Sharpe: {riskData.metrics.sharpe_ratio}
           </div>
-        </article>
+        </Tilt3DCard>
       </div>
+
+      {/* Live Data-Reactive Threat Radar Scanner */}
+      <RiskThreatRadar
+        onSelectScenario={(scenarioId) => {
+          const s = riskData.scenarios.find(sc => sc.id === scenarioId)
+          if (s) setActiveScenario(s)
+        }}
+      />
 
       {/* Concentration & HHI Detail Grid */}
       <div className="risk-layout-grid">

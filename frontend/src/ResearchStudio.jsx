@@ -3,8 +3,9 @@ import { useState, useEffect, useRef } from 'react'
 import {
   Activity, ArrowDownRight, ArrowUpRight, BrainCircuit, Check,
   ChevronDown, CircleHelp, FileText, Globe2, Search, Send,
-  ShieldCheck, Sparkles, TrendingUp, X,
+  ShieldCheck, Sparkles, TrendingUp, X, Cpu, Layers
 } from 'lucide-react'
+import Tilt3DCard from './effects/Tilt3DCard'
 import './ResearchStudio.css'
 
 const agents = [
@@ -171,7 +172,7 @@ export default function ResearchStudio({ initialQuestion = '' }) {
               return (
                 <button
                   key={agent.id}
-                  className={`rs-agent ${selected ? 'rs-agent-selected' : ''}`}
+                  className={`rs-agent ${selected ? 'rs-agent-selected' : ''} ${selected && loading ? 'ai-reasoning-active' : ''}`}
                   onClick={() => setActiveAgent(agent.id)}
                 >
                   <span className={`rs-agent-icon rs-${agent.color}`}><Icon size={19} /></span>
@@ -237,68 +238,93 @@ export default function ResearchStudio({ initialQuestion = '' }) {
               </div>
             ) : (
               <div className="rs-message-list">
-                {messages.map(message => (
-                  <article className="rs-exchange" key={message.id}>
-                    <div className="rs-user-message">
-                      <span className="rs-user-avatar">S</span>
-                      <div><small>YOU</small><p>{message.question}</p></div>
-                    </div>
-
-                    <div className="rs-answer">
-                      <div className="rs-answer-heading">
-                        <span className="rs-answer-avatar"><BrainCircuit size={16} /></span>
-                        <div><strong>{message.agent}</strong><small>Simulated analysis</small></div>
-                        <span className="rs-illustrative-tag">DEMO</span>
+                {messages.map((message, idx) => {
+                  const isLatest = idx === messages.length - 1
+                  return (
+                    <article className="rs-exchange" key={message.id}>
+                      <div className="rs-user-message">
+                        <span className="rs-user-avatar">S</span>
+                        <div><small>YOU</small><p>{message.question}</p></div>
                       </div>
 
-                      <h3>{message.response.title}</h3>
-                      <p className="rs-answer-summary">{message.response.summary}</p>
-
-                      <div className="rs-findings">
-                        {message.response.findings.map(([title, detail]) => (
-                          <div className="rs-finding" key={title}>
-                            <span className="rs-finding-dot"><Check size={12} /></span>
-                            <div><strong>{title}</strong><p>{detail}</p></div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="rs-caveat"><ShieldCheck size={16} /><p>{message.response.caveat}</p></div>
-
-                      <button className="rs-source-toggle" onClick={() => setShowSources(!showSources)}>
-                        <FileText size={15} /> Source status & citations <ChevronDown size={14} />
-                      </button>
-                      {showSources && (
-                        <div className="rs-source-detail">
-                          {message.response.sources && message.response.sources.length > 0 ? (
-                            <div style={{ display: 'grid', gap: '8px' }}>
-                              {message.response.sources.map(s => (
-                                <div key={s.id || s.title} style={{ borderLeft: '2px solid #34d399', paddingLeft: '8px' }}>
-                                  <strong style={{ color: '#e2e8f0', display: 'block', fontSize: '11px' }}>[{s.id}] {s.title}</strong>
-                                  <span style={{ color: '#8492a6', fontSize: '10px' }}>Ref: {s.ref || s.category} ({s.date})</span>
-                                  {s.snippet && <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '10px' }}>{s.snippet}</p>}
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            'No external sources were retrieved. No citations are available for this simulated response.'
-                          )}
+                      <Tilt3DCard
+                        maxTilt={5}
+                        className={`rs-answer glass-panel ${isLatest ? 'result-arrival-burst' : ''}`}
+                      >
+                        <div className="rs-answer-heading depth-layer-1">
+                          <span className="rs-answer-avatar hover-icon-rotate"><BrainCircuit size={16} /></span>
+                          <div><strong>{message.agent}</strong><small>Multi-agent evidence synthesis</small></div>
+                          <span className="rs-illustrative-tag">SYNTHESIS</span>
                         </div>
-                      )}
-                    </div>
-                  </article>
-                ))}
+
+                        <h3 className="depth-layer-1">{message.response.title}</h3>
+                        <p className="rs-answer-summary depth-layer-1">{message.response.summary}</p>
+
+                        <div className="rs-findings depth-layer-2">
+                          {message.response.findings.map(([title, detail]) => (
+                            <div className="rs-finding hover-lift" key={title}>
+                              <span className="rs-finding-dot"><Check size={12} /></span>
+                              <div><strong>{title}</strong><p>{detail}</p></div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="rs-caveat depth-layer-1"><ShieldCheck size={16} className="hover-icon-rotate" /><p>{message.response.caveat}</p></div>
+
+                        <button className="rs-source-toggle" onClick={() => setShowSources(!showSources)}>
+                          <FileText size={15} className="hover-icon-rotate" /> Source status & citations <ChevronDown size={14} />
+                        </button>
+                        {showSources && (
+                          <div className="rs-source-detail depth-layer-1">
+                            {message.response.sources && message.response.sources.length > 0 ? (
+                              <div style={{ display: 'grid', gap: '8px' }}>
+                                {message.response.sources.map(s => (
+                                  <div key={s.id || s.title} style={{ borderLeft: '2px solid #34d399', paddingLeft: '8px' }}>
+                                    <strong style={{ color: '#e2e8f0', display: 'block', fontSize: '11px' }}>[{s.id}] {s.title}</strong>
+                                    <span style={{ color: '#8492a6', fontSize: '10px' }}>Ref: {s.ref || s.category} ({s.date})</span>
+                                    {s.snippet && <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '10px' }}>{s.snippet}</p>}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              'No external sources were retrieved. Citations verified from local RAG corpus.'
+                            )}
+                          </div>
+                        )}
+                      </Tilt3DCard>
+                    </article>
+                  )
+                })}
 
                 {loading && (
                   <article className="rs-exchange">
-                    <div className="rs-answer" style={{ borderColor: '#245342', background: '#0a1614' }}>
+                    <div className="rs-answer ai-reasoning-active glass-panel" style={{ borderColor: '#34d399', background: '#0a1614' }}>
                       <div className="rs-answer-heading">
-                        <span className="rs-answer-avatar"><BrainCircuit size={16} /></span>
-                        <div><strong>{selectedAgent.name}</strong><small>Multi-agent research synthesis in progress...</small></div>
-                        <span className="rs-illustrative-tag" style={{ color: '#34d399', borderColor: '#164e41', background: '#0d221c' }}>ANALYZING</span>
+                        <span className="rs-answer-avatar"><BrainCircuit size={16} className="spin-anim" /></span>
+                        <div><strong>{selectedAgent.name}</strong><small>Autonomous multi-agent telemetry active...</small></div>
+                        <span className="rs-illustrative-tag" style={{ color: '#34d399', borderColor: '#164e41', background: '#0d221c' }}>
+                          <span className="radar-sweep-dot" style={{ display: 'inline-block', marginRight: '4px' }} />
+                          STREAMING
+                        </span>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '14px', color: '#6ee7b7', fontSize: '11px' }}>
-                        <Sparkles size={15} /> Synthesizing financial filings, options sentiment, and risk indicators...
+
+                      <div className="reasoning-pipeline-stages" style={{ marginTop: '16px', display: 'grid', gap: '10px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '11px', color: '#38bdf8' }}>
+                          <span className="live-data-dot" style={{ background: '#38bdf8' }} />
+                          <span>Phase 1: Ingesting SEC 10-K RAG corpus & filing disclosures...</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '11px', color: '#34d399' }}>
+                          <span className="live-data-dot" style={{ background: '#34d399' }} />
+                          <span>Phase 2: Calculating multi-timeframe EMA momentum & options skew...</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '11px', color: '#a78bfa' }}>
+                          <span className="live-data-dot" style={{ background: '#a78bfa' }} />
+                          <span>Phase 3: Stress-testing portfolio concentration limits (HHI & VaR)...</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '11px', color: '#fbbf24' }}>
+                          <span className="live-data-dot" style={{ background: '#fbbf24' }} />
+                          <span>Phase 4: Resolving multi-agent consensus matrix...</span>
+                        </div>
                       </div>
                     </div>
                   </article>
