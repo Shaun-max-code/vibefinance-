@@ -581,6 +581,82 @@
   text-align: right;
 }
 
+/* Risk Mode Switcher (Executive vs Threat Radar) */
+.risk-mode-toggle-group {
+  display: inline-flex;
+  background: #090f19;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.risk-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.risk-mode-btn:hover {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.risk-mode-active {
+  background: #1e293b !important;
+  color: #34d399 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Streamlined Scenario Selector Pills */
+.scenario-pills-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 12px 0 6px;
+}
+
+@media (max-width: 600px) {
+  .scenario-pills-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scenario-pill-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 12px;
+  background: #090f19;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  color: #cbd5e1;
+  transition: all 0.2s ease;
+}
+
+.scenario-pill-btn:hover {
+  background: #101827;
+  border-color: #334155;
+}
+
+.scenario-pill-active {
+  background: #0d261e !important;
+  border-color: #10b981 !important;
+  color: #f1f5f9 !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+}
+
 .scenarios-selector {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

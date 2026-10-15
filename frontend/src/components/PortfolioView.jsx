@@ -1,15 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   Wallet, ArrowUpRight, ArrowDownRight, Plus, RefreshCw,
-  Clock, CheckCircle, ShieldCheck, PieChart as PieIcon, ArrowRightLeft, Sparkles
+  Clock, CheckCircle, ShieldCheck, PieChart as PieIcon, ArrowRightLeft, Sparkles, Activity
 } from 'lucide-react'
-
-const initialHoldings = [
-  { symbol: 'AAPL', name: 'Apple Inc.', price: '$245.50', price_num: 245.50, change: '+2.1%', weight: '24.5%', shares: 24.3, avg_cost: '$212.40', market_value: '$5,965.65', unrealized_pnl: '+$804.33 (+15.6%)', sector: 'Consumer Electronics & Services', color: '#94a3b8' },
-  { symbol: 'MSFT', name: 'Microsoft', price: '$521.40', price_num: 521.40, change: '+1.4%', weight: '18.2%', shares: 8.5, avg_cost: '$465.00', market_value: '$4,431.90', unrealized_pnl: '+$479.40 (+12.1%)', sector: 'Enterprise Software & Cloud', color: '#60a5fa' },
-  { symbol: 'NVDA', name: 'NVIDIA', price: '$188.20', price_num: 188.20, change: '+3.8%', weight: '16.8%', shares: 21.8, avg_cost: '$142.10', market_value: '$4,102.76', unrealized_pnl: '+$1,004.98 (+32.4%)', sector: 'Semiconductors & AI Compute', color: '#a3e635' },
-  { symbol: 'GOOGL', name: 'Alphabet', price: '$245.10', price_num: 245.10, change: '-0.4%', weight: '12.6%', shares: 12.5, avg_cost: '$220.80', market_value: '$3,063.75', unrealized_pnl: '+$303.75 (+11.0%)', sector: 'Digital Advertising & Cloud', color: '#fbbf24' }
-]
+import { useRealtime } from '../context/RealtimeContext'
 
 const initialAllocation = [
   { name: 'Equities', value: 62.4, color: '#10b981', amount: '$15,220.92' },
@@ -19,82 +13,42 @@ const initialAllocation = [
   { name: 'Others', value: 4.5, color: '#64748b', amount: '$1,097.66' }
 ]
 
-const initialTransactions = [
-  { id: 'tx-101', date: '2026-10-12', symbol: 'NVDA', type: 'BUY', shares: 5, price: 182.40, total: 912.00, status: 'COMPLETED' },
-  { id: 'tx-102', date: '2026-10-04', symbol: 'AAPL', type: 'DIVIDEND', shares: 24.3, price: 0.25, total: 6.08, status: 'CREDITED' },
-  { id: 'tx-103', date: '2026-09-28', symbol: 'MSFT', type: 'BUY', shares: 2.5, price: 508.10, total: 1270.25, status: 'COMPLETED' }
-]
-
 export default function PortfolioView({ onNavigateToResearch }) {
-  const [holdings, setHoldings] = useState(initialHoldings)
-  const [transactions, setTransactions] = useState(initialTransactions)
-  const [allocation, setAllocation] = useState(initialAllocation)
+  const {
+    holdings,
+    portfolioValueFormatted,
+    dailyPnLFormatted,
+    dailyPnLChange,
+    dailyPnLIsPositive,
+    totalReturnFormatted,
+    totalReturnPct,
+    cashBalanceFormatted,
+    cashWeight,
+    transactions,
+    executeTrade,
+    portfolioTickDir,
+  } = useRealtime()
+
+  const [allocation] = useState(initialAllocation)
   const [showTradeModal, setShowTradeModal] = useState(false)
   const [tradeForm, setTradeForm] = useState({ symbol: 'NVDA', type: 'BUY', shares: 2 })
   const [tradeFeedback, setTradeFeedback] = useState(null)
-  const [dataSource, setDataSource] = useState('LOCAL_SYNC')
-
-  useEffect(() => {
-    fetch('http://localhost:5000/api/portfolio')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.holdings) {
-          setHoldings(data.holdings)
-          setDataSource('LIVE_BACKEND_API')
-        }
-        if (data && data.recent_transactions) {
-          setTransactions(data.recent_transactions)
-        }
-        if (data && data.allocation) {
-          setAllocation(data.allocation)
-        }
-      })
-      .catch(() => {
-        setDataSource('LOCAL_SYNC')
-      })
-  }, [])
 
   function handleTradeSubmit(e) {
     e.preventDefault()
-    const targetSymbol = tradeForm.symbol
     const sharesNum = parseFloat(tradeForm.shares) || 1
-    const targetStock = holdings.find(h => h.symbol === targetSymbol)
-    const priceNum = targetStock?.price_num || 188.20
-    const totalCost = (sharesNum * priceNum).toFixed(2)
-
-    // Attempt backend trade API
-    fetch('http://localhost:5000/api/portfolio/trade', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        symbol: targetSymbol,
-        type: tradeForm.type,
-        shares: sharesNum,
-        price: priceNum
-      })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.transaction) {
-          setTransactions(prev => [data.transaction, ...prev])
-        }
-      })
-      .catch(() => {})
-
-    // Optimistic UI update
-    const newTx = {
-      id: `tx-${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
-      symbol: targetSymbol,
+    const res = executeTrade({
+      symbol: tradeForm.symbol,
       type: tradeForm.type,
-      shares: sharesNum,
-      price: priceNum,
-      total: parseFloat(totalCost),
-      status: 'COMPLETED'
+      shares: sharesNum
+    })
+
+    if (res.success) {
+      setTradeFeedback(`Simulated ${tradeForm.type} order for ${sharesNum} shares of ${tradeForm.symbol} executed in real time.`)
+    } else {
+      setTradeFeedback(res.error || 'Trade could not be executed.')
     }
 
-    setTransactions(prev => [newTx, ...prev])
-    setTradeFeedback(`Simulated ${tradeForm.type} order for ${sharesNum} shares of ${targetSymbol} ($${totalCost}) executed.`)
     setShowTradeModal(false)
     setTimeout(() => setTradeFeedback(null), 5000)
   }
@@ -104,8 +58,11 @@ export default function PortfolioView({ onNavigateToResearch }) {
       {/* View Header */}
       <div className="view-header">
         <div>
-          <div className="eyebrow">
-            <span className="live-dot" /> CAPITAL ASSETS & ALLOCATION
+          <div className="eyebrow" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className="live-badge-stream">
+              <span className="live-beacon-dot" /> LIVE TICK STREAM · REAL TIME
+            </span>
+            <span>CAPITAL ASSETS & ALLOCATION</span>
           </div>
           <h1>Portfolio Holdings<span className="brand-accent">.</span></h1>
           <p>Real-time valuation, cost basis tracking, and simulated trade execution.</p>
@@ -134,16 +91,18 @@ export default function PortfolioView({ onNavigateToResearch }) {
         </div>
       )}
 
-      {/* Portfolio Metrics Grid */}
+      {/* Real-Time Live Portfolio Metrics Grid */}
       <div className="metrics-grid">
         <article className="metric-card">
           <div className="metric-heading">
             <span>Portfolio value</span>
             <Wallet size={17} />
           </div>
-          <div className="metric-value">$24,392.50</div>
-          <div className="metric-change">
-            <ArrowUpRight size={14} /> +2.4% today
+          <div className={`metric-value ${portfolioTickDir ? (portfolioTickDir === 'up' ? 'tick-flash-up' : 'tick-flash-down') : ''}`}>
+            {portfolioValueFormatted}
+          </div>
+          <div className="metric-change positive">
+            <ArrowUpRight size={14} /> Live Real-Time
           </div>
         </article>
 
@@ -152,9 +111,11 @@ export default function PortfolioView({ onNavigateToResearch }) {
             <span>Daily P&L</span>
             <ArrowUpRight size={17} />
           </div>
-          <div className="metric-value">+$588.20</div>
-          <div className="metric-change">
-            <ArrowUpRight size={14} /> +2.47% today
+          <div className="metric-value">
+            {dailyPnLFormatted}
+          </div>
+          <div className={`metric-change ${dailyPnLIsPositive ? 'positive' : 'negative'}`}>
+            <ArrowUpRight size={14} /> {dailyPnLChange}
           </div>
         </article>
 
@@ -163,9 +124,9 @@ export default function PortfolioView({ onNavigateToResearch }) {
             <span>Total return</span>
             <Sparkles size={17} />
           </div>
-          <div className="metric-value">+18.6%</div>
-          <div className="metric-change">
-            <ArrowUpRight size={14} /> +$3,832.20 all time
+          <div className="metric-value">{totalReturnPct}</div>
+          <div className="metric-change positive">
+            <ArrowUpRight size={14} /> {totalReturnFormatted} all time
           </div>
         </article>
 
@@ -174,9 +135,9 @@ export default function PortfolioView({ onNavigateToResearch }) {
             <span>Cash balance</span>
             <ShieldCheck size={17} />
           </div>
-          <div className="metric-value">$3,250.00</div>
+          <div className="metric-value">{cashBalanceFormatted}</div>
           <div className="metric-change">
-            13.3% of portfolio
+            {cashWeight}
           </div>
         </article>
       </div>
@@ -210,7 +171,7 @@ export default function PortfolioView({ onNavigateToResearch }) {
               </thead>
               <tbody>
                 {holdings.map(h => {
-                  const isPos = String(h.change).startsWith('+')
+                  const tickClass = h.lastTick === 'up' ? 'tick-flash-up' : h.lastTick === 'down' ? 'tick-flash-down' : ''
 
                   return (
                     <tr key={h.symbol}>
@@ -223,17 +184,27 @@ export default function PortfolioView({ onNavigateToResearch }) {
                           </div>
                         </div>
                       </td>
-                      <td>{h.price}</td>
-                      <td className={isPos ? 'positive' : 'negative'}>{h.change}</td>
+                      <td>
+                        <span className={tickClass}>
+                          <strong>{h.price_formatted}</strong>
+                        </span>
+                      </td>
+                      <td className={h.change_is_positive ? 'positive' : 'negative'}>
+                        {h.change_formatted}
+                      </td>
                       <td>{h.shares}</td>
-                      <td>{h.avg_cost}</td>
-                      <td><strong>{h.market_value}</strong></td>
-                      <td className="positive">{h.unrealized_pnl}</td>
+                      <td>${h.avg_cost.toFixed(2)}</td>
+                      <td>
+                        <strong className={tickClass}>{h.market_value_formatted}</strong>
+                      </td>
+                      <td className={h.unrealized_pnl_num >= 0 ? 'positive' : 'negative'}>
+                        {h.unrealized_pnl_formatted}
+                      </td>
                       <td>
                         <div className="weight-cell">
-                          <span>{h.weight}</span>
+                          <span>{h.weight_formatted}</span>
                           <div className="weight-bar">
-                            <div style={{ width: h.weight, background: h.color }} />
+                            <div style={{ width: h.weight_formatted, background: h.color }} />
                           </div>
                         </div>
                       </td>

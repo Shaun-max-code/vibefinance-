@@ -5,7 +5,6 @@ import {
   BarChart3, Globe, Zap, ArrowRight, User, Layers, Crosshair
 } from 'lucide-react'
 
-import GlobalCursorSpotlight from '../effects/GlobalCursorSpotlight'
 import SpotlightCard from '../effects/SpotlightCard'
 import MagneticButton from '../effects/MagneticButton'
 import HeroCanvas from '../effects/HeroCanvas'
@@ -20,8 +19,7 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
 
   return (
     <div className="landing-page">
-      {/* Soft Ambient Spotlight Following Cursor */}
-      <GlobalCursorSpotlight />
+
 
       {/* Navigation Bar */}
       <header className="landing-nav">

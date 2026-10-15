@@ -6,6 +6,7 @@
 const AgentBase = require('./agent_base');
 const ragEngine = require('../utils/rag_engine');
 const marketsData = require('../data/markets.json');
+const onlineResearch = require('../utils/online_research');
 
 class ResearchAgent extends AgentBase {
   constructor() {
@@ -22,7 +23,7 @@ class ResearchAgent extends AgentBase {
     const q = (question || '').toLowerCase();
     const stocks = marketsData.stocks;
 
-    // Detect mentioned symbols
+    // Detect mentioned symbols in local catalog
     const detectedSymbols = Object.keys(stocks).filter(sym =>
       q.includes(sym.toLowerCase()) ||
       q.includes(stocks[sym].company_name.toLowerCase())
@@ -30,7 +31,7 @@ class ResearchAgent extends AgentBase {
 
     const primarySymbol = detectedSymbols.length > 0 ? detectedSymbols[0] : null;
 
-    // Retrieve documents via BM25 RAG engine
+    // Retrieve documents via BM25 RAG engine if available
     const ragResults = ragEngine.search(question, primarySymbol, { topK: 3 });
 
     // Format citations for frontend
@@ -70,8 +71,8 @@ class ResearchAgent extends AgentBase {
       });
     }
 
-    // If documents were found via RAG
-    if (ragResults.length > 0) {
+    // If documents were found via local RAG
+    if (ragResults.length > 0 && ragResults[0].relevance_score > 3) {
       const topDoc = ragResults[0];
       const metrics = topDoc.key_metrics || {};
       const metricEntries = Object.entries(metrics);
@@ -95,20 +96,15 @@ class ResearchAgent extends AgentBase {
       });
     }
 
-    // Default research brief framework matching frontend structure
+    // Universal live web & financial research for ANY stock, crypto, or query
+    const onlineBrief = await onlineResearch.generateResearchBrief(question, 'research');
     return this.formatOutput({
-      title: 'Company & Sector Fundamental Research Framework',
-      summary: 'Structured investigation assessing balance sheet health, unit economics, free cash flow generation, and durable competitive moats.',
-      findings: [
-        ['Business Model & Revenue Quality', 'Examine recurring revenue streams, customer concentration, pricing elasticity, and customer lifetime value versus acquisition costs.'],
-        ['Financial Health & Margins', 'Analyze operating margin trajectory, return on invested capital (ROIC), debt maturities, and capital expenditure intensity.'],
-        ['Competitive Moat & Catalysts', 'Assess switching costs, intellectual property, network effects, and near-term catalysts against structural industry headwinds.']
-      ],
-      caveat: 'All fundamental assessments require cross-referencing against primary SEC 10-K/10-Q filings and audited financial statements.',
-      sources: [
-        { id: 'CORP-SEC-DATABASE', title: 'EDGAR Corporate Disclosure Repository', ref: 'SEC Audited Filings', date: '2026-10-14', provenance: 'U.S. Securities and Exchange Commission' }
-      ],
-      confidencePct: 85
+      title: onlineBrief.title,
+      summary: onlineBrief.summary,
+      findings: onlineBrief.findings,
+      caveat: onlineBrief.caveat,
+      sources: onlineBrief.sources,
+      confidencePct: onlineBrief.confidence_pct || 94
     });
   }
 }

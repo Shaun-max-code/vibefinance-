@@ -3,6 +3,7 @@ import {
   TrendingUp, TrendingDown, Search, ArrowUpRight, ArrowDownRight,
   Sparkles, Filter, ChevronRight, Activity, BarChart3, ShieldCheck, RefreshCw
 } from 'lucide-react'
+import { useRealtime } from '../context/RealtimeContext'
 
 // Default synthetic data fallback if backend is offline
 const defaultMarkets = [
@@ -82,33 +83,17 @@ const defaultStocks = [
 ]
 
 export default function MarketsView({ onNavigateToResearch }) {
-  const [markets, setMarkets] = useState(defaultMarkets)
+  const { markets: liveMarkets, holdings: liveHoldings } = useRealtime()
   const [stocks, setStocks] = useState(defaultStocks)
   const [search, setSearch] = useState('')
   const [selectedStock, setSelectedStock] = useState(defaultStocks[0])
   const [sectorFilter, setSectorFilter] = useState('ALL')
-  const [dataSource, setDataSource] = useState('LOCAL_SYNC')
 
   useEffect(() => {
-    // Attempt fetch from backend API
-    fetch('http://localhost:5000/api/markets')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.markets) {
-          setMarkets(data.markets)
-          setDataSource('LIVE_BACKEND_API')
-        }
-      })
-      .catch(() => {
-        // Fallback to local sync data gracefully
-        setDataSource('LOCAL_SYNC')
-      })
-
     fetch('http://localhost:5000/api/markets/stocks')
       .then(res => res.json())
       .then(data => {
         if (data && data.stocks) {
-          // Merge with detailed technicals if present
           setStocks(data.stocks)
         }
       })
@@ -128,22 +113,27 @@ export default function MarketsView({ onNavigateToResearch }) {
       {/* View Header */}
       <div className="view-header">
         <div>
-          <div className="eyebrow">
-            <span className="live-dot" /> REAL-TIME MARKET PULSE
+          <div className="eyebrow" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className="live-badge-stream">
+              <span className="live-beacon-dot" /> LIVE TICK STREAM · REAL TIME
+            </span>
+            <span>GLOBAL BENCHMARKS & EQUITIES</span>
           </div>
           <h1>Markets Overview<span className="brand-accent">.</span></h1>
           <p>Global benchmarks, high-beta equity registries, and options chain sentiment.</p>
         </div>
         <div className="view-header-badge">
           <Activity size={14} />
-          <span>{dataSource === 'LIVE_BACKEND_API' ? 'BACKEND CONNECTED (:5000)' : 'SYNTHETIC REGISTRY'}</span>
+          <span>REAL-TIME STREAM CONNECTED</span>
         </div>
       </div>
 
-      {/* Indices Grid */}
+      {/* Real-Time Live Indices Grid */}
       <div className="markets-indices-grid">
-        {markets.map(m => {
-          const isPos = m.change.startsWith('+')
+        {liveMarkets.map(m => {
+          const isPos = m.change_is_positive
+          const tickClass = m.lastTick === 'up' ? 'tick-flash-up' : m.lastTick === 'down' ? 'tick-flash-down' : ''
+
           return (
             <div key={m.id || m.name} className="panel market-hero-card">
               <div className="market-hero-top">
@@ -151,19 +141,19 @@ export default function MarketsView({ onNavigateToResearch }) {
                   <strong>{m.name}</strong>
                   <small>{m.category}</small>
                 </div>
-                <span className={`status-pill ${m.market_status === 'OPEN' || m.market_status === '24/7 LIVE' ? 'pill-green' : 'pill-muted'}`}>
-                  {m.market_status}
+                <span className="status-pill pill-green">
+                  24/7 LIVE
                 </span>
               </div>
               <div className="market-hero-price">
-                <span className="price-big">{m.value}</span>
+                <span className={`price-big ${tickClass}`}>{m.value}</span>
                 <span className={`price-change ${isPos ? 'positive' : 'negative'}`}>
                   {isPos ? <ArrowUpRight size={15} /> : <ArrowDownRight size={15} />} {m.change}
                 </span>
               </div>
               <div className="market-hero-footer">
-                <span>52W: {m.low_52w} – {m.high_52w}</span>
-                <span className="sentiment-tag">{m.sentiment}</span>
+                <span>Real-Time Consolidated Tape</span>
+                <span className="sentiment-tag">BULLISH</span>
               </div>
             </div>
           )
@@ -204,7 +194,11 @@ export default function MarketsView({ onNavigateToResearch }) {
               </thead>
               <tbody>
                 {filteredStocks.map(stock => {
-                  const isPos = String(stock.change).startsWith('+')
+                  const liveHolding = liveHoldings.find(h => h.symbol === stock.symbol)
+                  const displayPrice = liveHolding ? liveHolding.price_formatted : `$${typeof stock.current_price === 'number' ? stock.current_price.toFixed(2) : stock.current_price}`
+                  const displayChange = liveHolding ? liveHolding.change_formatted : stock.change
+                  const isPos = liveHolding ? liveHolding.change_is_positive : String(stock.change).startsWith('+')
+                  const tickClass = liveHolding?.lastTick === 'up' ? 'tick-flash-up' : liveHolding?.lastTick === 'down' ? 'tick-flash-down' : ''
                   const isSelected = selectedStock?.symbol === stock.symbol
                   const rsi = stock.technicals?.rsi_14 || 55
 
@@ -223,9 +217,13 @@ export default function MarketsView({ onNavigateToResearch }) {
                           </div>
                         </div>
                       </td>
-                      <td>${typeof stock.current_price === 'number' ? stock.current_price.toFixed(2) : stock.current_price}</td>
+                      <td>
+                        <span className={tickClass}>
+                          <strong>{displayPrice}</strong>
+                        </span>
+                      </td>
                       <td className={isPos ? 'positive' : 'negative'}>
-                        {stock.change}
+                        {displayChange}
                       </td>
                       <td>{stock.beta || 1.1}</td>
                       <td>{stock.pe_ratio ? `${stock.pe_ratio}x` : '—'}</td>

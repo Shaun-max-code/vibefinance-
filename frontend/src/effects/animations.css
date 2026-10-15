@@ -167,23 +167,7 @@
    -------------------------------------------------------------------------- */
 
 .global-cursor-spotlight {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 600px;
-  height: 600px;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle 280px at center,
-    rgba(52, 211, 153, 0.045) 0%,
-    rgba(56, 189, 248, 0.02) 45%,
-    transparent 70%
-  );
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
-  will-change: transform;
+  display: none !important;
 }
 
 @media (max-width: 768px) {
@@ -1052,8 +1036,8 @@ button:hover .hover-icon-rotate,
 
 .radar-main-layout {
   display: grid;
-  grid-template-columns: minmax(320px, 1.2fr) minmax(280px, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr);
+  gap: 18px;
   align-items: center;
 }
 
@@ -1067,13 +1051,13 @@ button:hover .hover-icon-rotate,
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .radar-screen {
   position: relative;
   width: 100%;
-  max-width: 380px;
+  max-width: 300px;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: radial-gradient(
@@ -1352,5 +1336,59 @@ button:hover .hover-icon-rotate,
 
 .result-arrival-burst {
   animation: resultBurst 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   10. LIVE REAL-TIME PRICE TICK FLASH & STREAM INDICATORS
+   -------------------------------------------------------------------------- */
+
+.tick-flash-up {
+  background: rgba(16, 185, 129, 0.24) !important;
+  color: #34d399 !important;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.tick-flash-down {
+  background: rgba(239, 68, 68, 0.24) !important;
+  color: #f87171 !important;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.live-badge-stream {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #34d399;
+  letter-spacing: 0.5px;
+}
+
+.live-beacon-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseBeacon 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseBeacon {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+  }
 }
 

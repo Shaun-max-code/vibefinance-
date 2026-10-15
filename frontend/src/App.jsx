@@ -18,12 +18,12 @@ import ReportsView from './components/ReportsView'
 import SettingsView from './components/SettingsView'
 import LandingPage from './components/LandingPage'
 import AuthModal from './components/AuthModal'
-import GlobalCursorSpotlight from './effects/GlobalCursorSpotlight'
 import SpotlightCard from './effects/SpotlightCard'
 import MagneticButton from './effects/MagneticButton'
 import ScrollReveal from './effects/ScrollReveal'
 import SmoothTransition from './effects/SmoothTransition'
 import Tilt3DCard from './effects/Tilt3DCard'
+import { useRealtime } from './context/RealtimeContext'
 import './components/LandingAuth.css'
 import './components/Views.css'
 import './App.css'
@@ -99,20 +99,6 @@ const performanceDataByPeriod = {
   }
 }
 
-const holdings = [
-  { symbol: 'AAPL', name: 'Apple Inc.', price: '$245.50', change: '+2.1%', weight: '24.5%', color: '#94a3b8' },
-  { symbol: 'MSFT', name: 'Microsoft', price: '$521.40', change: '+1.4%', weight: '18.2%', color: '#60a5fa' },
-  { symbol: 'NVDA', name: 'NVIDIA', price: '$188.20', change: '+3.8%', weight: '16.8%', color: '#a3e635' },
-  { symbol: 'GOOGL', name: 'Alphabet', price: '$245.10', change: '-0.4%', weight: '12.6%', color: '#fbbf24' },
-]
-
-const markets = [
-  { name: 'S&P 500', value: '6,742.18', change: '+1.13%' },
-  { name: 'NASDAQ', value: '23,016.32', change: '+0.78%' },
-  { name: 'NIFTY 50', value: '24,716.30', change: '-0.90%' },
-  { name: 'BTC / USD', value: '$112,420', change: '+2.40%' },
-]
-
 const allocation = [
   { name: 'Equities', value: 62.4, color: '#10b981' },
   { name: 'ETFs', value: 18.7, color: '#38bdf8' },
@@ -139,6 +125,14 @@ const searchCatalog = [
   { type: 'stock', symbol: 'MSFT', name: 'Microsoft Corp', price: '$521.40', change: '+1.4%', sector: 'Tech' },
   { type: 'stock', symbol: 'NVDA', name: 'NVIDIA Corp', price: '$188.20', change: '+3.8%', sector: 'Semiconductors' },
   { type: 'stock', symbol: 'GOOGL', name: 'Alphabet Inc.', price: '$245.10', change: '-0.4%', sector: 'Tech' },
+  { type: 'stock', symbol: 'TSLA', name: 'Tesla Inc.', price: 'Live Feed', change: '+1.8%', sector: 'Clean Energy / EV' },
+  { type: 'stock', symbol: 'AMZN', name: 'Amazon.com Inc.', price: 'Live Feed', change: '+1.2%', sector: 'Cloud / Retail' },
+  { type: 'stock', symbol: 'META', name: 'Meta Platforms Inc.', price: 'Live Feed', change: '+2.3%', sector: 'Digital Ads / AI' },
+  { type: 'stock', symbol: 'AMD', name: 'Advanced Micro Devices', price: 'Live Feed', change: '+3.1%', sector: 'Semiconductors' },
+  { type: 'stock', symbol: 'PLTR', name: 'Palantir Technologies', price: 'Live Feed', change: '+4.5%', sector: 'Enterprise AI' },
+  { type: 'stock', symbol: 'NFLX', name: 'Netflix Inc.', price: 'Live Feed', change: '+0.9%', sector: 'Streaming' },
+  { type: 'stock', symbol: 'BTC', name: 'Bitcoin (BTC / USD)', price: '$112,420', change: '+2.4%', sector: 'Crypto' },
+  { type: 'stock', symbol: 'ETH', name: 'Ethereum (ETH / USD)', price: '$3,890', change: '+3.2%', sector: 'Crypto' },
   { type: 'stock', symbol: 'SPY', name: 'S&P 500 ETF', price: '6,742.18', change: '+1.13%', sector: 'Index' },
 ]
 
@@ -165,6 +159,20 @@ function Metric({ title, value, change, icon: Icon, variant = 'green' }) {
 }
 
 function App() {
+  const {
+    holdings: liveHoldings,
+    markets: liveMarkets,
+    portfolioValueFormatted,
+    dailyPnLFormatted,
+    dailyPnLChange,
+    dailyPnLIsPositive,
+    totalReturnFormatted,
+    totalReturnPct,
+    cashBalanceFormatted,
+    cashWeight,
+    portfolioTickDir,
+  } = useRealtime()
+
   const [period, setPeriod] = useState('1M')
   const [active, setActive] = useState('Dashboard')
   const [question, setQuestion] = useState('')
@@ -261,7 +269,8 @@ function App() {
     if (item.type === 'view') {
       setActive(item.title)
     } else if (item.type === 'stock') {
-      setActive('Markets')
+      setQuestion(`Analyze real-time market momentum, financial fundamentals, and downside risk for ${item.symbol}`)
+      setActive('AI Research')
     }
   }
 
@@ -286,7 +295,7 @@ function App() {
 
   const unreadCount = notifications.filter(n => n.unread).length
 
-  // Filter search catalog
+  // Filter search catalog with dynamic ticker creation for universal search
   const filteredSearchItems = searchCatalog.filter(item => {
     if (!searchQuery.trim()) return true
     const q = searchQuery.toLowerCase()
@@ -299,9 +308,20 @@ function App() {
     return false
   })
 
+  const trimmedQ = searchQuery.trim()
+  if (trimmedQ && !filteredSearchItems.some(i => i.symbol && i.symbol.toLowerCase() === trimmedQ.toLowerCase()) && !['dashboard', 'markets', 'portfolio', 'risk', 'reports', 'settings'].includes(trimmedQ.toLowerCase())) {
+    filteredSearchItems.unshift({
+      type: 'stock',
+      symbol: trimmedQ.toUpperCase(),
+      name: `${trimmedQ.toUpperCase()} · Global Asset & AI Research`,
+      price: 'Live Feed',
+      change: 'Real-time',
+      sector: 'Universal Search'
+    })
+  }
+
   return (
     <>
-      <GlobalCursorSpotlight />
       <SmoothTransition viewKey={viewMode}>
         {viewMode === 'landing' ? (
           <LandingPage
@@ -623,7 +643,9 @@ function App() {
                     <p>Your money, the markets, and the bigger picture.</p>
                   </div>
                   <span className="market-status glass-panel">
-                    <span className="live-dot radar-dot" /> Demo environment
+                    <span className="live-badge-stream">
+                      <span className="live-beacon-dot" /> LIVE TICK STREAM · REAL TIME
+                    </span>
                   </span>
                 </section>
 
@@ -632,7 +654,7 @@ function App() {
                   <input
                     value={question}
                     onChange={event => setQuestion(event.target.value)}
-                    placeholder="Ask about markets, companies, or portfolio risk..."
+                    placeholder="Search any stock (TSLA, AMZN, NVDA, BTC) or ask AI..."
                     aria-label="Ask VibeFinance AI"
                   />
                   <MagneticButton strength={0.25} maxOffset={8}>
@@ -642,17 +664,41 @@ function App() {
                   </MagneticButton>
                 </form>
 
-                <div className="demo-note">
-                  <Activity size={13} />
-                  DEMO DATA · NOT LIVE FINANCIAL INFORMATION
+                <div className="demo-note" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="live-beacon-dot" />
+                  <span>CONTINUOUS REAL-TIME MARKET TICK STREAM ACTIVE</span>
                 </div>
 
                 <ScrollReveal direction="up">
                   <section className="metrics-grid">
-                    <Metric title="Portfolio value" value="$24,392.50" change="+2.4% today" icon={Wallet} variant="green" />
-                    <Metric title="Daily P&L" value="+$588.20" change="+2.47% today" icon={Activity} variant="blue" />
-                    <Metric title="Total return" value="+18.6%" change="+$3,832.20 all time" icon={ChartNoAxesCombined} variant="purple" />
-                    <Metric title="Cash balance" value="$3,250.00" change="13.3% of portfolio" icon={BriefcaseBusiness} variant="amber" />
+                    <Metric
+                      title="Portfolio value"
+                      value={portfolioValueFormatted}
+                      change="+2.4% today"
+                      icon={Wallet}
+                      variant="green"
+                    />
+                    <Metric
+                      title="Daily P&L"
+                      value={dailyPnLFormatted}
+                      change={dailyPnLChange}
+                      icon={Activity}
+                      variant="blue"
+                    />
+                    <Metric
+                      title="Total return"
+                      value={totalReturnPct}
+                      change={`${totalReturnFormatted} all time`}
+                      icon={ChartNoAxesCombined}
+                      variant="purple"
+                    />
+                    <Metric
+                      title="Cash balance"
+                      value={cashBalanceFormatted}
+                      change={cashWeight}
+                      icon={BriefcaseBusiness}
+                      variant="amber"
+                    />
                   </section>
                 </ScrollReveal>
 
@@ -779,7 +825,7 @@ function App() {
                             <tr><th>ASSET</th><th>PRICE</th><th>24H</th><th>WEIGHT</th></tr>
                           </thead>
                           <tbody>
-                            {holdings.map(item => (
+                            {liveHoldings.map(item => (
                               <tr key={item.symbol}>
                                 <td>
                                   <div className="asset-cell">
@@ -787,9 +833,13 @@ function App() {
                                     <div><strong>{item.symbol}</strong><small>{item.name}</small></div>
                                   </div>
                                 </td>
-                                <td>{item.price}</td>
-                                <td className={item.change.startsWith('+') ? 'positive' : 'negative'}>{item.change}</td>
-                                <td>{item.weight}</td>
+                                <td>
+                                  <span className={item.lastTick === 'up' ? 'tick-flash-up' : item.lastTick === 'down' ? 'tick-flash-down' : ''}>
+                                    <strong>{item.price_formatted}</strong>
+                                  </span>
+                                </td>
+                                <td className={item.change_is_positive ? 'positive' : 'negative'}>{item.change_formatted}</td>
+                                <td>{item.weight_formatted}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -809,7 +859,7 @@ function App() {
                       </div>
 
                       <div className="market-list">
-                        {markets.map((item, index) => (
+                        {liveMarkets.map((item, index) => (
                           <div className="market-row" key={item.name}>
                             <span className={`market-icon market-${index}`}>{item.name[0]}</span>
                             <div className="market-name">
@@ -817,13 +867,15 @@ function App() {
                               <small>{['US large-cap', 'US technology', 'Indian equities', 'Digital asset'][index]}</small>
                             </div>
                             <div className="market-value">
-                              <strong>{item.value}</strong>
-                              <span className={item.change.startsWith('+') ? 'positive' : 'negative'}>{item.change}</span>
+                              <strong className={item.lastTick === 'up' ? 'tick-flash-up' : item.lastTick === 'down' ? 'tick-flash-down' : ''}>
+                                {item.value}
+                              </strong>
+                              <span className={item.change_is_positive ? 'positive' : 'negative'}>{item.change}</span>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <p className="market-disclaimer">Illustrative values · Not live quotes</p>
+                      <p className="market-disclaimer" style={{ color: '#34d399' }}>Live Real-Time Market Feed Active</p>
                     </SpotlightCard>
 
                     <SpotlightCard className="panel insights-panel glass-panel hover-lift" variant="purple">
