@@ -8,7 +8,7 @@ import {
   Activity, ArrowDownRight, ArrowUpRight, Bell, BrainCircuit,
   BriefcaseBusiness, ChartNoAxesCombined, ChevronDown, FileText,
   LayoutDashboard, Menu, Search, Settings2, ShieldCheck,
-  Sparkles, Wallet, Zap, Globe, LogOut, LogIn, X, Check, CheckCircle, Clock
+  Sparkles, Wallet, Zap, Globe, Home, LogOut, LogIn, X, Check, CheckCircle, Clock
 } from 'lucide-react'
 import ResearchStudio from './ResearchStudio'
 import MarketsView from './components/MarketsView'
@@ -338,7 +338,7 @@ function App() {
                 className="brand"
                 onClick={() => setViewMode('landing')}
                 style={{ cursor: 'pointer' }}
-                title="Return to Landing Page"
+                title="Return to Home"
               >
                 <div className="brand-mark hover-icon-rotate"><Activity size={21} /></div>
                 <span>Vibe<span className="brand-accent">Finance</span></span>
@@ -382,8 +382,8 @@ function App() {
             </SpotlightCard>
 
             <button className="nav-item" onClick={() => setViewMode('landing')}>
-              <Globe size={18} />
-              <span>Landing Page</span>
+              <Home size={18} />
+              <span>Home</span>
             </button>
 
             <button className="nav-item" onClick={() => setActive('Settings')}>
@@ -560,9 +560,9 @@ function App() {
                 className="landing-login-btn magnetic-btn hover-lift"
                 style={{ fontSize: '11px', padding: '5px 11px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
                 onClick={() => setViewMode('landing')}
-                title="Return to Landing Page"
+                title="Return to Home"
               >
-                <Globe size={13} className="hover-icon-rotate" /> Home
+                <Home size={13} className="hover-icon-rotate" /> Home
               </button>
             </MagneticButton>
 

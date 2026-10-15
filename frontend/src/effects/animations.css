@@ -407,11 +407,11 @@ button:hover .hover-icon-rotate,
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(16, 185, 129, 0.24) 0%,
-    rgba(6, 78, 59, 0.12) 50%,
-    transparent 75%
+    rgba(52, 211, 153, 0.28) 0%,
+    rgba(167, 243, 208, 0.16) 45%,
+    transparent 70%
   );
-  filter: blur(75px);
+  filter: blur(80px);
   animation: auroraPulse 14s ease-in-out infinite alternate;
   will-change: transform, opacity;
 }
@@ -425,11 +425,11 @@ button:hover .hover-icon-rotate,
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(56, 189, 248, 0.22) 0%,
-    rgba(14, 116, 144, 0.1) 50%,
-    transparent 75%
+    rgba(56, 189, 248, 0.26) 0%,
+    rgba(186, 230, 253, 0.16) 45%,
+    transparent 70%
   );
-  filter: blur(80px);
+  filter: blur(85px);
   animation: auroraShiftSecondary 16s ease-in-out infinite alternate;
   will-change: transform, opacity;
 }
@@ -443,11 +443,11 @@ button:hover .hover-icon-rotate,
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(167, 139, 250, 0.16) 0%,
-    rgba(109, 40, 217, 0.06) 50%,
-    transparent 75%
+    rgba(192, 132, 252, 0.22) 0%,
+    rgba(233, 213, 255, 0.14) 45%,
+    transparent 70%
   );
-  filter: blur(90px);
+  filter: blur(95px);
   animation: auroraPulse 19s ease-in-out infinite alternate-reverse;
   will-change: transform, opacity;
 }
@@ -457,12 +457,12 @@ button:hover .hover-icon-rotate,
   position: absolute;
   inset: 0;
   background-image: 
-    linear-gradient(to right, rgba(27, 41, 59, 0.3) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(27, 41, 59, 0.3) 1px, transparent 1px);
+    linear-gradient(to right, rgba(148, 163, 184, 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.22) 1px, transparent 1px);
   background-size: 40px 40px;
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 80%);
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 80%);
-  opacity: 0.65;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 30%, #000 35%, transparent 85%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 30%, #000 35%, transparent 85%);
+  opacity: 0.5;
   pointer-events: none;
   animation: gridScan 35s linear infinite;
 }
@@ -471,10 +471,10 @@ button:hover .hover-icon-rotate,
 .gradient-text-animated {
   background: linear-gradient(
     135deg,
-    #34d399 0%,
-    #60a5fa 35%,
-    #a78bfa 70%,
-    #34d399 100%
+    #059669 0%,
+    #0284c7 35%,
+    #7c3aed 70%,
+    #059669 100%
   );
   background-size: 250% auto;
   -webkit-background-clip: text;
@@ -1343,5 +1343,93 @@ button:hover .hover-icon-rotate,
     transform: scale(1.4);
     opacity: 0.6;
   }
+}
+
+/* --------------------------------------------------------------------------
+   16. MODERN PEARL LIGHT THEME COMPONENT OVERRIDES
+   -------------------------------------------------------------------------- */
+
+.landing-page .diagram-header-left h2 {
+  color: #0f172a;
+}
+
+.landing-page .diagram-header-left p {
+  color: #475569;
+}
+
+.landing-page .diagram-ctrl-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.landing-page .diagram-ctrl-btn:hover {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #059669;
+}
+
+.landing-page .diagram-inspector {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 14px 35px -10px rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+.landing-page .inspector-title h3 {
+  color: #0f172a;
+}
+
+.landing-page .inspector-title p {
+  color: #475569;
+}
+
+.landing-page .telemetry-item strong {
+  color: #0f172a;
+}
+
+.landing-page .threat-radar-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 14px 40px -10px rgba(15, 23, 42, 0.08);
+}
+
+.landing-page .radar-header-left h3 {
+  color: #0f172a;
+}
+
+.landing-page .radar-header-left p {
+  color: #475569;
+}
+
+.landing-page .radar-threat-inspector {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px -5px rgba(15, 23, 42, 0.06);
+}
+
+.landing-page .radar-threat-inspector h4 {
+  color: #0f172a;
+}
+
+.landing-page .threat-desc {
+  color: #475569;
+}
+
+.landing-page .threat-stat-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.landing-page .threat-stat-box strong {
+  color: #0f172a;
+}
+
+.landing-page .radar-status-tag {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
 }
 

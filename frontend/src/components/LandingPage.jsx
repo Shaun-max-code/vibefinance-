@@ -98,28 +98,6 @@ export default function LandingPage({ onLaunchTerminal, onOpenLogin, onOpenSignu
         {/* Interactive Floating Micro-Particle Canvas */}
         <HeroCanvas />
 
-        {/* Floating 3D Tech Badges (Foreground Parallax) */}
-        <div
-          className="floating-hero-badge badge-left float-slow-1 glass-badge"
-          style={{ transform: `translateY(${scrollY * -0.09}px)` }}
-        >
-          <span className="radar-dot" />
-          <span>SEC 10-K RAG GROUNDED</span>
-        </div>
-
-        <div
-          className="floating-hero-badge badge-right float-slow-2 glass-badge"
-          style={{ transform: `translateY(${scrollY * -0.13}px)` }}
-        >
-          <Zap size={14} style={{ color: '#38bdf8' }} />
-          <span>3 CONCURRENT AI AGENTS</span>
-        </div>
-
-        {/* Hero Content */}
-        <div className="hero-badge float-slow-3 glass-badge">
-          <span className="radar-dot" /> MULTI-AGENT AUTONOMOUS FINANCIAL INTELLIGENCE
-        </div>
-
         <h1 className="hero-headline">
           Institutional research,<br />
           <span className="gradient-text gradient-text-animated">
