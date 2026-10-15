@@ -75,7 +75,9 @@ export default function ReportsView({ onNavigateToResearch }) {
   const [generationSuccess, setGenerationSuccess] = useState(false)
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/reports')
+    
+fetch(`${import.meta.env.VITE_API_URL}/api/reports`)
+
       .then(res => res.json())
       .then(data => {
         if (data && data.reports && Array.isArray(data.reports)) {
@@ -89,7 +91,9 @@ export default function ReportsView({ onNavigateToResearch }) {
     setIsGenerating(true)
 
     // Attempt backend API
-    fetch('http://localhost:5000/api/reports/generate', {
+    
+fetch(`${import.meta.env.VITE_API_URL}/api/reports/generate`, {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

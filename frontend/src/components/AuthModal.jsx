@@ -30,7 +30,7 @@ export default function AuthModal({ initialMode = 'login', onClose, onLoginSucce
     setError(null)
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginForm)
@@ -78,11 +78,11 @@ export default function AuthModal({ initialMode = 'login', onClose, onLoginSucce
     setLoading(true)
     setError(null)
 
-    try {
-      const res = await fetch('http://localhost:5000/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(signupForm)
+   try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(signupForm)
       })
       const data = await res.json()
 

@@ -268,7 +268,9 @@ export function RealtimeProvider({ children }) {
     setTransactions(prev => [newTx, ...prev])
 
     // Try sending to backend for persistence
-    fetch('http://localhost:5000/api/portfolio/trade', {
+    
+fetch(`${import.meta.env.VITE_API_URL}/api/portfolio/trade`, {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ symbol, type, shares: tradeShares, price: currentPrice })

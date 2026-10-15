@@ -160,7 +160,7 @@ export default function ResearchStudio({ initialQuestion = '' }) {
     setShowSources(false)
 
     try {
-      const res = await fetch('http://localhost:5000/api/research/ask', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/research/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: prompt, agent_id: selectedAgent.id })

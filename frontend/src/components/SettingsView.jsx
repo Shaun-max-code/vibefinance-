@@ -21,11 +21,13 @@ export default function SettingsView({ onLogout }) {
   const [saveMessage, setSaveMessage] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:5000/api')
+    
+fetch(`${import.meta.env.VITE_API_URL}/api`)
+
       .then(res => res.json())
       .then(data => {
         if (data && data.status === 'ONLINE') {
-          setBackendStatus('ONLINE (Port 5000)')
+          setBackendStatus('ONLINE (Render)')
         } else {
           setBackendStatus('OFFLINE')
         }

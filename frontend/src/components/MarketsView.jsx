@@ -90,7 +90,9 @@ export default function MarketsView({ onNavigateToResearch }) {
   const [sectorFilter, setSectorFilter] = useState('ALL')
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/markets/stocks')
+   
+   fetch(`${import.meta.env.VITE_API_URL}/api/markets/stocks`)
+
       .then(res => res.json())
       .then(data => {
         if (data && data.stocks) {
