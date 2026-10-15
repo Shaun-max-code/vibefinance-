@@ -1,16 +1,41 @@
-# React + Vite
+# VibeFinance Frontend Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A state-of-the-art financial command center and multi-agent intelligence interface built with **React 19**, **Vite**, **Recharts**, and an advanced physics-driven visual effects system.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Highlights
 
-## React Compiler
+- **10 Advanced Visual Effects:**
+  - `Tilt3DCard` — 3D perspective tilt with dynamic specular glare and shifting shadows.
+  - `SelfDrawingArchitectureDiagram` — Progressive SVG self-drawing neural multi-agent architecture.
+  - `RiskThreatRadar` — Real-time rotating 360° radar threat scanner with interactive scenario triggers.
+  - `SmoothTransition` — Seamless page and view transitions without abrupt flashes.
+  - `GlobalCursorSpotlight` — Ambient glowing spotlight trailing the mouse pointer.
+  - `SpotlightCard` — Cursor-tracking radial gradient card borders & lighting.
+  - `MagneticButton` — Physics-based magnetic attraction on interactive buttons.
+  - `HeroCanvas` — Interactive 60fps micro-particle constellation canvas.
+  - `useParallaxScroll` — Multi-plane parallax scrolling with fractional velocity layers.
+  - `ScrollReveal` — Viewport intersection-triggered staggered reveals.
+- **Glassmorphic Design System:** Frosted translucent panels with `backdrop-filter: blur(20px)`, specular top borders, and multi-tier ambient shadows.
+- **7 Workspace Views:** Dashboard, Markets, AI Research Studio, Portfolio Tracker, Risk Analysis, Reports Dossiers, and Settings.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Available Scripts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+In the `frontend` directory, you can run:
+
+```bash
+# Start Vite development server with HMR
+npm run dev
+
+# Build production bundle
+npm run build
+
+# Preview production build locally
+npm run preview
+
+# Run ESLint validation
+npm run lint
+```
