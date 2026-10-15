@@ -11,13 +11,13 @@ export function useTilt3D(options = {}) {
     maxTilt = 8,
     perspective = 1100,
     scale = 1.02,
-    glare = true,
+    glare = false,
   } = options
 
   const ref = useRef(null)
   const [tiltState, setTiltState] = useState({
     transform: `perspective(${perspective}px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
-    boxShadow: '0 12px 30px -10px rgba(0, 0, 0, 0.55), 0 0 20px -5px rgba(16, 185, 129, 0.05)',
+    boxShadow: '0 12px 30px -10px rgba(0, 0, 0, 0.55)',
     glareX: 50,
     glareY: 50,
     glareOpacity: 0,
@@ -41,10 +41,6 @@ export function useTilt3D(options = {}) {
     const tiltX = -normY * maxTilt
     const tiltY = normX * maxTilt
 
-    // Dynamic specular glare position tracking mouse
-    const glareX = ((x / rect.width) * 100).toFixed(1)
-    const glareY = ((y / rect.height) * 100).toFixed(1)
-
     // Dynamic drop shadow shifting opposite to the tilt direction (overhead light illusion)
     const shadowOffsetX = (-tiltY * 3.5).toFixed(1)
     const shadowOffsetY = (tiltX * 3.5 + 18).toFixed(1)
@@ -52,18 +48,18 @@ export function useTilt3D(options = {}) {
 
     setTiltState({
       transform: `perspective(${perspective}px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(${scale}, ${scale}, ${scale})`,
-      boxShadow: `${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px -8px rgba(0, 0, 0, 0.75), 0 0 35px -5px rgba(52, 211, 153, 0.18)`,
-      glareX,
-      glareY,
-      glareOpacity: glare ? 0.85 : 0,
+      boxShadow: `${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px -8px rgba(0, 0, 0, 0.75)`,
+      glareX: 50,
+      glareY: 50,
+      glareOpacity: 0,
       isHovered: true,
     })
-  }, [maxTilt, perspective, scale, glare])
+  }, [maxTilt, perspective, scale])
 
   const handleMouseLeave = useCallback(() => {
     setTiltState({
       transform: `perspective(${perspective}px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
-      boxShadow: '0 12px 30px -10px rgba(0, 0, 0, 0.55), 0 0 20px -5px rgba(16, 185, 129, 0.05)',
+      boxShadow: '0 12px 30px -10px rgba(0, 0, 0, 0.55)',
       glareX: 50,
       glareY: 50,
       glareOpacity: 0,

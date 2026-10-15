@@ -177,74 +177,28 @@
 }
 
 /* --------------------------------------------------------------------------
-   4. SPOTLIGHT CARD EFFECTS (CARD FOLLOWS MOUSE)
+   4. SPOTLIGHT CARD EFFECTS (CURSOR HOVER GLOW REMOVED)
    -------------------------------------------------------------------------- */
 
 .spotlight-card {
   position: relative;
   overflow: hidden;
-  --mouse-x: 50%;
-  --mouse-y: 50%;
-  --spotlight-color: rgba(52, 211, 153, 0.12);
-  --spotlight-border-color: rgba(52, 211, 153, 0.4);
 }
 
-/* Soft light following cursor on the card surface */
-.spotlight-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    var(--spotlight-color, rgba(52, 211, 153, 0.12)),
-    transparent 65%
-  );
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-  z-index: 1;
-}
-
-/* Dynamic glowing border tracking cursor */
+/* Hovering glow effect of the cursor completely disabled per user request */
+.spotlight-card::before,
 .spotlight-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: radial-gradient(
-    320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    var(--spotlight-border-color, rgba(52, 211, 153, 0.4)),
-    transparent 70%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  z-index: 2;
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .spotlight-card:hover::before,
 .spotlight-card:hover::after {
-  opacity: 1;
-}
-
-/* Variant spotlight colors */
-.spotlight-blue {
-  --spotlight-color: rgba(56, 189, 248, 0.13);
-  --spotlight-border-color: rgba(56, 189, 248, 0.45);
-}
-
-.spotlight-purple {
-  --spotlight-color: rgba(167, 139, 250, 0.14);
-  --spotlight-border-color: rgba(167, 139, 250, 0.45);
-}
-
-.spotlight-amber {
-  --spotlight-color: rgba(251, 191, 36, 0.13);
-  --spotlight-border-color: rgba(251, 191, 36, 0.4);
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -359,8 +313,7 @@
 
 .hover-lift:hover {
   transform: translateY(-5px) scale(1.01);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7),
-              0 0 25px rgba(52, 211, 153, 0.14);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
   border-color: rgba(52, 211, 153, 0.45);
 }
 

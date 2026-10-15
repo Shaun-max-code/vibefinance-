@@ -14,22 +14,13 @@ export default function Tilt3DCard({
   className = '',
   maxTilt = 7,
   scale = 1.018,
-  glare = true,
+  glare = false,
   as: Component = 'div',
   style = {},
   variant = 'green', // 'green' | 'blue' | 'purple' | 'amber'
   ...props
 }) {
-  const { ref, tiltState, eventHandlers } = useTilt3D({ maxTilt, scale, glare })
-
-  const glareColor =
-    variant === 'blue'
-      ? 'rgba(56, 189, 248, 0.16)'
-      : variant === 'purple'
-      ? 'rgba(167, 139, 250, 0.16)'
-      : variant === 'amber'
-      ? 'rgba(251, 191, 36, 0.16)'
-      : 'rgba(52, 211, 153, 0.16)'
+  const { ref, tiltState, eventHandlers } = useTilt3D({ maxTilt, scale, glare: false })
 
   return (
     <Component
@@ -47,23 +38,6 @@ export default function Tilt3DCard({
       }}
       {...props}
     >
-      {/* Dynamic Specular Lighting Glare */}
-      {glare && (
-        <div
-          className="tilt-3d-glare"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: 'inherit',
-            background: `radial-gradient(420px circle at ${tiltState.glareX}% ${tiltState.glareY}%, ${glareColor}, rgba(255, 255, 255, 0.08) 20%, transparent 65%)`,
-            opacity: tiltState.glareOpacity,
-            pointerEvents: 'none',
-            transition: 'opacity 0.3s ease',
-            zIndex: 1,
-          }}
-          aria-hidden="true"
-        />
-      )}
 
       {/* Card Content with 3D Depth support */}
       <div style={{ position: 'relative', zIndex: 2, transformStyle: 'preserve-3d', height: '100%' }}>
