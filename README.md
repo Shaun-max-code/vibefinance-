@@ -12,75 +12,29 @@
 ---
 
 ## Table of Contents
-- [1. Overview & Vision](#1-overview--vision)
-- [2. Advanced Visual & Interactive Experience](#2-advanced-visual--interactive-experience)
-- [3. Multi-Agent Reasoning Architecture](#3-multi-agent-reasoning-architecture)
-- [4. Core Workspace Views](#4-core-workspace-views)
-- [5. System Architecture & Diagram](#5-system-architecture--diagram)
-- [6. Directory Structure](#6-directory-structure)
-- [7. Getting Started](#7-getting-started)
-- [8. Production Build & Verification](#8-production-build--verification)
+- [1. Executive Summary & Core Pillars](#1-executive-summary--core-pillars)
+- [2. Multi-Agent Reasoning Engine](#2-multi-agent-reasoning-engine)
+- [3. Frontend Architecture & Visual Effects](#3-frontend-architecture--visual-effects)
+- [4. Backend Architecture & REST API Reference](#4-backend-architecture--rest-api-reference)
+- [5. Synthetic Financial Datasets](#5-synthetic-financial-datasets)
+- [6. Security & Cryptographic Authentication](#6-security--cryptographic-authentication)
+- [7. Complete Repository Structure](#7-complete-repository-structure)
+- [8. Getting Started & Setup Guide](#8-getting-started--setup-guide)
+- [9. Automated Verification & Testing](#9-automated-verification--testing)
 
 ---
 
-## 1. Overview & Vision
+## 1. Executive Summary & Core Pillars
 
 Most retail screeners look only at share prices in isolation. **VibeFinance** introduces an institutional-grade intelligence pipeline that correlates price momentum, corporate regulatory disclosures, and quantitative risk limits simultaneously:
 
-1. **Grounded RAG Corpus:** Every fundamental claim is verified with direct citations to SEC 10-K, 10-Q reports, and earnings call transcripts.
+1. **Grounded RAG Corpus:** Every fundamental claim is verified with direct citations to SEC 10-K, 10-Q reports, and earnings conference call transcripts.
 2. **Mathematical Risk Guardrails:** Computes portfolio concentration using the **Herfindahl-Hirschman Index (HHI)**, weighted portfolio Beta, and **95% Parametric 1-Day Value-at-Risk (VaR)**.
 3. **Macro Scenario Stress Tests:** Interactive simulation of factor shocks (Tech Pullback, Yield Curve +50 bps Spike, Capex Supercycle) before trade execution.
 
 ---
 
-## 2. Advanced Visual & Interactive Experience
-
-VibeFinance is engineered with a state-of-the-art visual design system featuring 10 custom interactive and physics-driven effects:
-
-### 3D Depth & Perspective Tilt (`Tilt3DCard`)
-- **Physically Raised Surface:** Cards tilt smoothly in 3D based on pointer coordinates (`perspective(1100px) rotateX(...) rotateY(...) scale3d(1.02, 1.02, 1.02)`).
-- **Dynamic Specular Glare:** A radiant specular reflection moves dynamically across the card opposite to the angle of inclination.
-- **Counter-Directional Shifting Shadows:** Drop shadows shift away in real time, creating the optical illusion of physical elevation under an overhead light source.
-- **Parallax 3D Layering:** Child elements with `.depth-layer-1` (`translateZ(18px)`), `.depth-layer-2` (`translateZ(32px)`), and `.depth-layer-3` (`translateZ(48px)`) physically float above the card base.
-
-### Self-Drawing System Architecture (`SelfDrawingArchitectureDiagram`)
-- **Progressive SVG Vector Paths:** Connection lines draw themselves progressively from left to right across 4 neural layers using `@keyframes drawSvgPath` with animated `stroke-dasharray` and `stroke-dashoffset`.
-- **Live Data Telemetry Packets:** Animated glowing pulses stream continuously along connection lines.
-- **Interactive Exploration:** Hovering or clicking any node illuminates incoming data sources and outgoing downstream outputs while updating the real-time telemetry inspector.
-- **Playback Controls:** Includes a **Redraw Flow** replay button and a **Telemetry Flow ON/OFF** toggle.
-
-### Live Data-Reactive Threat Radar (`RiskThreatRadar`)
-- **Continuous 360° Sweep:** Rotating tactical radar beam (`@keyframes radarBeamSweep 4.5s linear infinite`) sweeping across 3 range rings (Guarded, Moderate, High Exposure).
-- **Live Threat Blips:** Projects portfolio risk factors (HHI Concentration 2,085, Portfolio Beta 1.25, 95% 1-Day VaR $582, Tech Allocation 59.5%, Yield Spike -$1,280).
-- **Radiating Sonar Pulses:** Threat nodes flash with expanding ping halos (`@keyframes pingRadarRing`) upon sweep detection.
-- **Interactive Reaction:** Clicking any threat node auto-activates and simulates the matching macro stress scenario in the Risk Engine.
-
-### Smooth Page & Tab Transitions (`SmoothTransition`)
-- Hardware-accelerated transitions (`@keyframes pageSlideFadeIn`, `cubic-bezier(0.16, 1, 0.3, 1)`) prevent abrupt screen flashes when navigating between the Landing Page and Terminal, or switching workspace views.
-
-### Magnetic Cursor & Ambient Spotlight (`GlobalCursorSpotlight`, `MagneticButton`)
-- **Ambient Cursor Spotlight:** A soft luminous aura floats smoothly behind the mouse across the entire application with fluid linear interpolation.
-- **Magnetic Buttons:** Primary CTAs (`Launch Terminal`, `Ask AI`, `Open Research Studio`) physically follow the cursor within their hover boundary, snapping back with a spring bounce on mouse leave.
-
-### Interactive Card Spotlights (`SpotlightCard`)
-- Tracks pointer `(x, y)` relative to card boundaries, projecting dynamic radial gradient lighting (`radial-gradient(450px circle at var(--mouse-x) var(--mouse-y), ...)`) across the surface and illuminating border edges.
-
-### Multi-Plane Parallax Scrolling (`useParallaxScroll`)
-- Background glowing aurora blobs drift at `0.16x` scroll velocity, the cybernetic perspective grid translates at `0.10x`, and foreground floating badges translate in reverse at `-0.09x` to `-0.13x`.
-
-### Glassmorphism & Levitating Floating Cards
-- Frosted glass cards use `backdrop-filter: blur(20px) saturate(180%)`, specular `inset 0 1px 0 rgba(255, 255, 255, 0.08)` borders, and multi-tier ambient shadows.
-- Continuous harmonic floating animations (`@keyframes floatGentle1`, `floatGentle2`, `floatGentle3`) applied to status pills and badges.
-
-### Interactive Hover Micro-Animations
-- Cards lift smoothly (`hover-lift` &rarr; `translateY(-5px) scale(1.01)`), shadows deepen with emerald/cyan glows, icons rotate and bounce (`hover-icon-rotate` &rarr; `rotate(12deg) scale(1.18)`), and buttons sweep with a shiny light reflection.
-
-### Animated Hero Section (`HeroCanvas`)
-- Organic animated aurora mesh, interactive 60fps micro-particle canvas with mouse repulsion, animated shimmering gradient text (`@keyframes textShimmer`), and live financial metrics ticker.
-
----
-
-## 3. Multi-Agent Reasoning Architecture
+## 2. Multi-Agent Reasoning Engine
 
 ```
                                 [ Synthetic Data Layer ]
@@ -109,34 +63,166 @@ VibeFinance is engineered with a state-of-the-art visual design system featuring
                                 [ Express REST API / UI ]
 ```
 
+### Specialized Agents
+
 1. **Market Agent (`market` · Green · `TrendingUp`):**
-   - Analyzes price action, 20/50/200 EMAs, RSI(14) divergences, volume surges, and options Put-Call Ratio (PCR).
+   - Focus: Price action, 20/50/200 EMAs, RSI(14) divergences, volume surges, and options Put-Call Ratio (PCR).
 2. **Research Agent (`research` · Blue · `BrainCircuit`):**
-   - Indexes regulatory SEC 10-K/10-Q filings, tracks gross margins, and produces verifiable citations (e.g. `[SEC-AAPL-2024-10K]`).
+   - Focus: Corporate filings, gross margin progression, RAG semantic search across audited disclosures.
+   - Grounding: Attaches verifiable document citations (e.g. `[SEC-AAPL-2024-10K]`, `[TRANS-NVDA-2025-Q2]`).
 3. **Risk Agent (`risk` · Purple · `ShieldCheck`):**
-   - Quantifies portfolio concentration (HHI), calculates parametric 95% 1-Day VaR, and stress-tests macro factor shocks.
-4. **Neural Arbiter / Orchestrator:**
-   - Coordinates agents in parallel, reconciles divergent signals, and binds outputs within mathematical risk guardrails.
+   - Focus: Herfindahl-Hirschman Index (HHI), Portfolio Beta, Parametric 95% 1-Day Value-at-Risk (VaR), drawdown scenarios.
+4. **Synthesis Orchestrator (`orchestrator`):**
+   - Coordinates the 3 agents in parallel, reconciles divergent signals, and binds outputs within mathematical risk guardrails.
 
 ---
 
-## 4. Core Workspace Views
+## 3. Frontend Architecture & Visual Effects
 
-- **Dashboard:** Portfolio summary (`$24,392.50`), interactive period charts (`1D`, `1W`, `1M`, `3M`, `1Y`), asset allocation donut, top holdings, market pulse, and quick AI prompts.
-- **AI Research Studio:** Dedicated multi-agent research workspace with live 4-stage data-reactive reasoning stream, agent selection, source citations drawer, and 3D research brief cards.
-- **Markets View:** Global benchmarks (S&P 500, NASDAQ, NIFTY 50, BTC/USD), equity screener, technical RSI/EMA indicators, and options PCR statistics.
-- **Portfolio View:** Holdings table with cost basis, unrealized P&L, allocation breakdown, and simulated order execution module.
-- **Risk Analysis View:** Herfindahl-Hirschman concentration gauge, live **Risk Threat Radar Scanner**, and macro factor shock simulator.
-- **Reports View:** Published weekly intelligence dossiers, monthly portfolio risk audits, and on-demand report generation.
-- **Settings View:** Investor profile, benchmark configurations, and risk tolerance constraints.
+VibeFinance is engineered with a state-of-the-art visual design system featuring 10 custom interactive and physics-driven effects:
+
+### 1. 3D Depth & Perspective Tilt (`Tilt3DCard`, `useTilt3D`)
+- **Physically Raised Surface:** Cards tilt smoothly in 3D based on normalized cursor position (`perspective(1100px) rotateX(...) rotateY(...) scale3d(1.02, 1.02, 1.02)`).
+- **Dynamic Specular Glare:** A radiant specular reflection moves dynamically across the card opposite to the angle of inclination (`radial-gradient(420px circle at ${glareX}% ${glareY}%)`).
+- **Counter-Directional Shifting Shadows:** Drop shadows shift away in real time (`box-shadow: ${-tiltY * 3.5}px ${tiltX * 3.5 + 18}px ${blur}px`), creating the optical illusion of physical elevation under an overhead light source.
+- **Parallax 3D Layering:** Child elements with `.depth-layer-1` (`translateZ(18px)`), `.depth-layer-2` (`translateZ(32px)`), and `.depth-layer-3` (`translateZ(48px)`) physically float above the card base.
+
+### 2. Self-Drawing System Architecture (`SelfDrawingArchitectureDiagram`)
+- **Progressive SVG Vector Paths:** Connection lines draw themselves progressively from left to right across 4 neural layers using `@keyframes drawSvgPath` with animated `stroke-dasharray` and `stroke-dashoffset`.
+- **Live Data Telemetry Packets:** Animated glowing pulses stream continuously along connection lines.
+- **Interactive Exploration:** Hovering or clicking any node illuminates incoming data sources and outgoing downstream outputs while updating the real-time telemetry inspector.
+- **Playback Controls:** Includes a **Redraw Flow** replay button and a **Telemetry Flow ON/OFF** toggle.
+
+### 3. Live Data-Reactive Threat Radar (`RiskThreatRadar`)
+- **Continuous 360° Sweep:** Rotating tactical radar beam (`@keyframes radarBeamSweep 4.5s linear infinite`) sweeping across 3 range rings (Guarded, Moderate, High Exposure).
+- **Live Threat Blips:** Projects portfolio risk factors (HHI Concentration 2,085, Portfolio Beta 1.25, 95% 1-Day VaR $582, Tech Allocation 59.5%, Yield Spike -$1,280).
+- **Radiating Sonar Pulses:** Threat nodes flash with expanding ping halos (`@keyframes pingRadarRing`) upon sweep detection.
+- **Interactive Reaction:** Clicking any threat node auto-activates and simulates the matching macro stress scenario in the Risk Engine.
+
+### 4. Smooth Page & Tab Transitions (`SmoothTransition`)
+- Hardware-accelerated transitions (`@keyframes pageSlideFadeIn`, `cubic-bezier(0.16, 1, 0.3, 1)`) prevent abrupt screen flashes when navigating between the Landing Page and Terminal, or switching workspace views.
+
+### 5. Magnetic Cursor & Ambient Spotlight (`GlobalCursorSpotlight`, `MagneticButton`)
+- **Ambient Cursor Spotlight:** A soft luminous aura floats smoothly behind the mouse across the entire application with fluid linear interpolation.
+- **Magnetic Buttons:** Primary CTAs (`Launch Terminal`, `Ask AI`, `Open Research Studio`) physically follow the cursor within their hover boundary, snapping back with a spring bounce on mouse leave.
+
+### 6. Interactive Card Spotlights (`SpotlightCard`)
+- Tracks pointer `(x, y)` relative to card boundaries, projecting dynamic radial gradient lighting (`radial-gradient(450px circle at var(--mouse-x) var(--mouse-y), ...)`) across the surface and illuminating border edges.
+
+### 7. Multi-Plane Parallax Scrolling (`useParallaxScroll`)
+- Background glowing aurora blobs drift at `0.16x` scroll velocity, the cybernetic perspective grid translates at `0.10x`, and foreground floating badges translate in reverse at `-0.09x` to `-0.13x`.
+
+### 8. Glassmorphism & Levitating Floating Cards
+- Frosted glass cards use `backdrop-filter: blur(20px) saturate(180%)`, specular `inset 0 1px 0 rgba(255, 255, 255, 0.08)` borders, and multi-tier ambient shadows.
+- Continuous harmonic floating animations (`@keyframes floatGentle1`, `floatGentle2`, `floatGentle3`) applied to status pills and badges.
+
+### 9. Interactive Hover Micro-Animations
+- Cards lift smoothly (`hover-lift` &rarr; `translateY(-5px) scale(1.01)`), shadows deepen with emerald/cyan glows, icons rotate and bounce (`hover-icon-rotate` &rarr; `rotate(12deg) scale(1.18)`), and buttons sweep with a shiny light reflection.
+
+### 10. Animated Hero Section (`HeroCanvas`)
+- Organic animated aurora mesh, interactive 60fps micro-particle canvas with mouse repulsion, animated shimmering gradient text (`@keyframes textShimmer`), and live financial metrics ticker.
 
 ---
 
-## 5. Directory Structure
+## 4. Backend Architecture & REST API Reference
+
+The backend is built as a standalone service in `backend/`, exposing CORS-enabled REST API endpoints on port `5000`:
+
+### Dashboard & Analytics
+- `GET /api/dashboard` - Complete dashboard snapshot (metrics, allocation, holdings, markets, insights).
+- `GET /api/dashboard/performance/:period` - Performance time series for `1D`, `1W`, `1M`, `3M`, or `1Y`.
+- `GET /api/dashboard/allocation` - Asset allocation breakdown across asset classes.
+
+### Markets & Stock Registry
+- `GET /api/markets` - Real-time market pulse for major indices (S&P 500, NASDAQ, NIFTY 50, BTC/USD).
+- `GET /api/markets/stocks` - List of tracked equities with quotes, changes, and sparklines.
+- `GET /api/markets/stocks/:symbol` - Detailed ticker statistics, EMAs, RSI, and options Max Pain.
+- `GET /api/markets/search?q={query}` - Search equities and benchmarks.
+
+### AI Research Studio
+- `GET /api/research/agents` - List of active research agents matching frontend specifications.
+- `GET /api/research/suggestions` - Starter research prompt suggestions.
+- `POST /api/research/ask` - Submit a question to an agent or orchestrator.
+  - Body: `{ "question": "What risks should I investigate in a tech-heavy portfolio?", "agent_id": "risk" }`
+  - Output contract directly matches `ResearchStudio.jsx` messages state:
+    ```json
+    {
+      "id": "1728900000000-12",
+      "question": "What risks should I investigate in a tech-heavy portfolio?",
+      "agent": "Risk Agent",
+      "response": {
+        "title": "Technology Sector Concentration & Downside Review",
+        "summary": "...",
+        "findings": [
+          ["Finding Title", "Detailed explanation..."]
+        ],
+        "caveat": "...",
+        "sources": [
+          { "id": "RISK-HHI-METRICS", "title": "...", "ref": "...", "date": "..." }
+        ]
+      },
+      "confidence_pct": 93
+    }
+    ```
+- `GET /api/research/corpus` - Browse synthetic SEC/SEBI filings.
+- `GET /api/research/search?q={query}` - Semantic / keyword search across filings.
+
+### Portfolio & Simulated Trading
+- `GET /api/portfolio` - Complete portfolio snapshot and recent transaction log.
+- `GET /api/portfolio/holdings` - List of current positions with cost basis and unrealized gain/loss.
+- `POST /api/portfolio/trade` - Execute a simulated buy/sell order.
+  - Body: `{ "symbol": "AAPL", "type": "BUY", "shares": 2 }`
+- `POST /api/portfolio/reset` - Reset portfolio state to initial defaults.
+
+### Risk & Stress Testing
+- `GET /api/risk` - HHI rating, weighted Beta, 95% 1-Day VaR, annualized volatility.
+- `GET /api/risk/scenarios` - Predefined stress scenarios (Tech Pullback, Rate Shock, etc.).
+- `POST /api/risk/stress-test` - Run scenario simulation.
+
+### Reports & Workspace
+- `GET /api/reports` - Published weekly digests and monthly audits.
+- `POST /api/reports/generate` - Generate on-demand multi-agent portfolio audit.
+- `GET /api/user/profile` - User workspace profile and alert configurations.
+- `PUT /api/user/preferences` - Update risk tolerance, benchmarks, or themes.
+
+### Authentication & Sessions
+- `POST /api/auth/register` - Create account with scrypt password hashing.
+- `POST /api/auth/login` - Authenticate and issue cryptographic JWT token.
+- `GET /api/auth/me` - Validate session and retrieve current user profile.
+- `POST /api/auth/logout` - Invalidate session.
+
+---
+
+## 5. Synthetic Financial Datasets
+
+All synthetic datasets are located in `backend/src/data/`:
+
+| File | Purpose | Key Metrics |
+|---|---|---|
+| `portfolio.json` | Holdings & cash balance | `$24,392.50` value, `+$588.20` daily P&L, `+18.6%` total return, `$3,250.00` cash, AAPL, MSFT, NVDA, GOOGL holdings, 1D-1Y series |
+| `markets.json` | Indices & technicals | S&P 500 (6,742.18), NASDAQ (23,016.32), NIFTY 50 (24,716.30), BTC/USD ($112,420), RSI, EMAs, MACD, PCR |
+| `documents_corpus.json` | Corporate disclosures | SEC 10-K/10-Q filings, Q3/Q4 earnings call transcripts, SEBI Reg 30 disclosures for RAG retrieval and citation grounding |
+| `risk_data.json` | Quantitative risk metrics | HHI concentration score (2,085), Portfolio Beta 1.25, 1-Day 95% VaR ($582.40), stress test definitions |
+| `reports.json` | Published intelligence briefs | Weekly dossiers, monthly portfolio risk audits, equity deep dives |
+| `user_profile.json` | Workspace state | User profile, risk tolerance score, benchmark settings, notification feed |
+| `users_store.json` | Auth storage | Scrypt-hashed credentials, salt, and session records |
+
+---
+
+## 6. Security & Cryptographic Authentication
+
+- **Password Hashing:** Passwords hashed using Node's native `crypto.scrypt` with unique cryptographically random salts.
+- **JWT Authentication:** Cryptographic HMAC SHA-256 JWT tokens with expiration and validation middleware.
+- **Rate Limiting:** Sliding-window rate limiter protecting authentication and research endpoints against brute-force and resource exhaustion.
+- **Input Sanitization:** Strict payload validation and sanitization on all incoming requests.
+
+---
+
+## 7. Complete Repository Structure
 
 ```
 vibefinance-/
-├── README.md                           # Main Project Documentation
+├── README.md                           # Master Project Documentation
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -154,7 +240,6 @@ vibefinance-/
 │   │   ├── effects/
 │   │   │   ├── Tilt3DCard.jsx          # 3D perspective card with glare & shadow
 │   │   │   ├── useTilt3D.js            # 3D tilt & glare physics hook
-│   │   │   ├── SelfDrawingArchitectureDiagram.jsx # Neural architecture visualizer
 │   │   │   ├── GlobalCursorSpotlight.jsx # Ambient cursor follower
 │   │   │   ├── SpotlightCard.jsx       # Card mouse spotlight tracking
 │   │   │   ├── MagneticButton.jsx      # Magnetic cursor button wrapper
@@ -178,15 +263,15 @@ vibefinance-/
     │   ├── controllers/                # Route controllers
     │   ├── routes/                     # REST API endpoints
     │   ├── data/                       # Synthetic financial datasets & SEC corpus
-    │   ├── utils/                      # Risk formulas (HHI, VaR, Beta)
+    │   ├── utils/                      # Risk formulas, RAG, & security helpers
     │   └── server.js                   # Express server entry point (Port 5000)
     ├── package.json
-    └── README.md                       # Backend API & Contract Documentation
+    └── .env.example
 ```
 
 ---
 
-## 6. Getting Started
+## 8. Getting Started & Setup Guide
 
 ### Prerequisites
 - **Node.js** (v18+ or v24+)
@@ -217,29 +302,32 @@ cd ..
 **Terminal 1 — Start the Backend API (Port 5000):**
 ```bash
 cd backend
-npm start
+npm start        # Production mode
+# or
+npm run dev      # Development mode with live reload
 ```
-*API will be active at `http://localhost:5000/api`*
+- **Interactive API Explorer & Documentation:** `http://localhost:5000/`
+- **REST API Endpoints:** `http://localhost:5000/api`
 
 **Terminal 2 — Start the Frontend Development Server (Port 5174 / 5173):**
 ```bash
 cd frontend
 npm run dev
 ```
-*Open `http://localhost:5174/` in your browser.*
+- **Web Application:** `http://localhost:5174/` (or `http://localhost:5173/`)
 
 ---
 
-## 7. Production Build & Verification
+## 9. Automated Verification & Testing
 
-To validate that all code, styles, and modules build cleanly for production:
+To validate the codebase, run production builds and the automated test suite:
 
 ```bash
-# Build frontend bundle
+# Validate frontend production build
 cd frontend
 npm run build
 
-# Run automated backend test suite
+# Run automated backend test suite (validates RAG, risk math, & API contracts)
 cd ../backend
 npm test
 ```
