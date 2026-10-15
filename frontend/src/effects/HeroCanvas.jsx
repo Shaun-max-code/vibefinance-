@@ -28,10 +28,10 @@ export default function HeroCanvas() {
     const particleCount = Math.floor(Math.min(width * 0.045, 55))
     const particles = []
     const colors = [
-      'rgba(16, 185, 129, ',  // Emerald
-      'rgba(2, 132, 199, ',   // Sky blue
-      'rgba(124, 58, 237, ',  // Violet
-      'rgba(13, 148, 136, ',  // Teal
+      'rgba(52, 211, 153, ',  // Emerald
+      'rgba(56, 189, 248, ',  // Sky cyan
+      'rgba(167, 139, 250, ', // Violet
+      'rgba(110, 231, 183, ', // Mint
     ]
 
     for (let i = 0; i < particleCount; i++) {
@@ -88,7 +88,7 @@ export default function HeroCanvas() {
           if (dist < 95) {
             const alpha = (1 - dist / 95) * 0.075
             ctx.beginPath()
-            ctx.strokeStyle = `rgba(16, 185, 129, ${alpha * 0.9})`
+            ctx.strokeStyle = `rgba(52, 211, 153, ${alpha})`
             ctx.lineWidth = 0.8
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
